@@ -27,9 +27,9 @@ library(gtools)
 
 #############Modelos de miraflores#########################################
 miss_var_summary (data_temp_min)
-model_Mtmin_1 <- lm(miraflores_temp_min  ~   Esperanza_temp_min + mallares_temp_min + chusis_temp_min+
+model_Mtmin_1 <- lm(miraflores_temp_min  ~   mallares_temp_min + chusis_temp_min+
                       miguel_temp_min + UDEP_temp_min,
-                    data = data_temp_min)
+                    data = data_temp_min) #0.9612
 #model_Mtmin_2 <-  lm(miraflores_temp_min  ~   Esperanza_temp_min + mallares_temp_min + chusis_temp_min+
  #                   miguel_temp_min,
   #              data = data_temp_min)
@@ -54,7 +54,7 @@ model_Mtmin_8 <-lm(miraflores_temp_min  ~   mallares_temp_min + miguel_temp_min,
                    data = data_temp_min) #0.9449
 model_Mtmin_9 <-lm(miraflores_temp_min  ~   chusis_temp_min + miguel_temp_min,
                    data = data_temp_min) #0.9095
-summary(model_Mtmin_4)
+summary(model_Mtmin_1)
 #Estimaciones con Cerritos
 
 
@@ -150,7 +150,6 @@ for (i in 1:49) {
                              data = data_temp_min)
           data_predictora <- tibble(#UDEP_temp_min = data_temp_min[r,]$UDEP_temp_min,
             miguel_temp_min = data_temp_min[r,]$miguel_temp_min,
-            
             #chusis_temp_min = data_temp_min[r,]$chusis_temp_min,
             #Bernal_temp_min = data_temp_min[r,]$Bernal_temp_min,
             mallares_temp_min = data_temp_min[r,]$mallares_temp_min,

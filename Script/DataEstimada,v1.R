@@ -69,26 +69,6 @@ ggplot(mi_df, aes(x =Bernal_bymonth$rain_month , y = chusis_bymonth$rain_month))
   geom_smooth(method = "lm", se = FALSE) 
 
 
-#Estimación Bernal
-imp_Bernal_marzo<- 
-  marzo %>%
-  bind_shadow()%>%
-  add_label_missings() %>%
-  impute_lm (Bernal_rain_marzo ~  miraflores_rain_marzo + chusis_rain_marzo + udep_rain_marzo)
-imp_Bernal_marzo
-
-
-marzo$Bernal_rain_marzo[40]
-
-
-lm_predictor_ <- lm(Bernal_rain_mes_3 ~  chusis_rain_mes_3 , data = mes_3)
-data_predictora <- data.frame(chusis_rain_mes_3 = 5.1)
-
-predict(lm_predictor, data_predictora)
-
-
-
-
 
 #Prueba para código predictor para años de estaciones con menos de 5 mese con NA
 
@@ -113,9 +93,9 @@ data_temp_max <- data.frame(year = Miguel_bymonth$year, month = Miguel_bymonth$m
                         miguel_temp_max =  Miguel_bymonth$max_temp_max,
                         Esperanza_temp_max = Esperanza_bymonth$max_temp_max,
                         mallares_temp_max = Mallares_bymonth$max_temp_max,
-                       
+                        UDEP_temp_max = data_UDEP_na[1:588,] $temp_max,
                         data_faltante)
-cor_temp_max <- cor(data_temp_max[,3:8], use = "pairwise.complete.obs")
+cor_temp_max <- cor(data_temp_max[,3:9], use = "pairwise.complete.obs")
 data_temp_min <- data.frame(year = Miguel_bymonth$year, month = Miguel_bymonth$month, 
                             Bernal_temp_min = Bernal_t$min_temp_min, 
                             chusis_temp_min = Chusis_t$min_temp_min,
@@ -123,9 +103,10 @@ data_temp_min <- data.frame(year = Miguel_bymonth$year, month = Miguel_bymonth$m
                             miguel_temp_min =  Miguel_bymonth$min_temp_min,
                             Esperanza_temp_min = Esperanza_bymonth$min_temp_min,
                             mallares_temp_min = Mallares_bymonth$min_temp_min,
+                            UDEP_temp_min = data_UDEP_na[1:588,]$temp_min,
                             data_faltante)
 
-cor_temp_min <- cor(data_temp_min[,3:8], use = "pairwise.complete.obs")
+cor_temp_min <- cor(data_temp_min[,3:9], use = "pairwise.complete.obs")
 
 
 

@@ -54,6 +54,3 @@ n_datos
 
 rain_meses <- data.frame(enero , marzo, Abril, mayo, junio, julio, agosto,
                          setiembre, Octubre, Noviembre, Diciembre)
-
-
-#Este es un comentario de prueba

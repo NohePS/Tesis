@@ -38,10 +38,10 @@ data_UDEP = as.data.frame( apply(data_UDEP, 2, as.numeric))
 #Seleccionando por variables
 year_UDEP = data_UDEP[,1]
 month_UDEP = data_UDEP[,2]
-day_UDEP = data_UDEP[,3]
-rain_UDEP = data_UDEP[,4]
-temp_max_UDEP = data_UDEP[,5]
-temp_min_UDEP = data_UDEP[,6]
+#day_UDEP = data_UDEP[,3]
+rain_UDEP = data_UDEP[,3]
+temp_max_UDEP = data_UDEP[,4]
+temp_min_UDEP = data_UDEP[,5]
 
 head(data_UDEP)
 
