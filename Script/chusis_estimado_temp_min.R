@@ -27,9 +27,9 @@ library(gtools)
 
 #############Modelos de chusis#########################################
 miss_var_summary (data_temp_min)
-model_ctmin_1 <- lm(chusis_temp_min  ~   Esperanza_temp_min + mallares_temp_min + miraflores_temp_min+
-                      miguel_temp_min + UDEP_temp_min,
-               data = data_temp_min)
+model_ctmin_1 <- lm(chusis_temp_min  ~   Esperanza_temp_min  + miraflores_temp_min+
+                        UDEP_temp_min,
+               data = data_temp_min)#0.9385
 #model_ctmin_2 <-  lm(chusis_temp_min  ~   Esperanza_temp_min + mallares_temp_min + miraflores_temp_min+
  #                      miguel_temp_min,
   #                   data = data_temp_min)
@@ -54,7 +54,7 @@ model_ctmin_8 <-lm(chusis_temp_min  ~   mallares_temp_min + miguel_temp_min,
                    data = data_temp_min) #0.9025
 model_ctmin_9 <-lm(chusis_temp_min  ~   miraflores_temp_min + miguel_temp_min,
                    data = data_temp_min) #0.8966
-summary(model_ctmin_9)
+summary(model_ctmin_1)
 #Estimaciones con Cerritos
 
 
