@@ -27,9 +27,9 @@ library(gtools)
 
 #############Modelos de chusis#########################################
 miss_var_summary (data_temp_max)
-model_Ctmax_1 <- lm(chusis_temp_max  ~   Esperanza_temp_max + mallares_temp_max + miraflores_temp_max+
-                      miguel_temp_max + UDEP_temp_max,
-               data = data_temp_max)
+model_ctmax_1 <- lm(chusis_temp_max  ~   Esperanza_temp_max  + miraflores_temp_max+
+                        UDEP_temp_max ,
+               data = data_temp_max)#0.9036
 #model_ctmax_2 <-  lm(chusis_temp_max  ~   Esperanza_temp_max + mallares_temp_max + miraflores_temp_max+
  #                      miguel_temp_max,
   #                   data = data_temp_max)
@@ -54,7 +54,9 @@ model_ctmax_10 <-lm(chusis_temp_max  ~   mallares_temp_max + miguel_temp_max,
                    data = data_temp_max) #0.8422
 model_ctmax_11 <-lm(chusis_temp_max  ~   miraflores_temp_max + miguel_temp_max,
                    data = data_temp_max) #0.8866
-summary(model_ctmax_11)
+model_ctmax_12 <-lm(chusis_temp_max  ~   miraflores_temp_max + UDEP_temp_max,
+                    data = data_temp_max) #0.8936
+summary(model_ctmax_12)
 #Estimaciones con Cerritos
 
 
@@ -137,27 +139,27 @@ for (i in 1:49) {
       
       for (s in 1:12){
         if (data_temp_max$year[r]==n_datos$año[i] && data_temp_max$month[r]== s 
-            && is.na(data_temp_max$miguel_temp_max[r])==FALSE 
-            #&& is.na(data_temp_max$UDEP_temp_max[r])==FALSE 
-            #&&is.na(data_temp_max$miraflores_temp_max[r])==FALSE 
+            #&& is.na(data_temp_max$miguel_temp_max[r])==FALSE 
+            && is.na(data_temp_max$UDEP_temp_max[r])==FALSE 
+            &&is.na(data_temp_max$miraflores_temp_max[r])==FALSE 
             #&& is.na(data_temp_max$Bernal_temp_max[r])==FALSE
-            && is.na(data_temp_max$Esperanza_temp_max[r])==FALSE
+            #&& is.na(data_temp_max$Esperanza_temp_max[r])==FALSE
             #&& is.na(data_temp_max$mallares_temp_max[r])==FALSE
             
             && is.na(data_temp_max$chusis_temp_max[r])==TRUE){
           j=j+1
-          model_ctmax_8 <-lm(chusis_temp_max  ~   Esperanza_temp_max + miguel_temp_max,
-                             data = data_temp_max)
-          data_predictora <- tibble(#UDEP_temp_max = data_temp_max[r,]$UDEP_temp_max,
-                                    miguel_temp_max = data_temp_max[r,]$miguel_temp_max,
-                                    #miraflores_temp_max = data_temp_max[r,]$miraflores_temp_max,
+          model_ctmax_12 <-lm(chusis_temp_max  ~   miraflores_temp_max + UDEP_temp_max,
+                              data = data_temp_max)
+          data_predictora <- tibble(UDEP_temp_max = data_temp_max[r,]$UDEP_temp_max,
+                                    #miguel_temp_max = data_temp_max[r,]$miguel_temp_max,
+                                    miraflores_temp_max = data_temp_max[r,]$miraflores_temp_max,
                                     #Bernal_temp_max = data_temp_max[r,]$Bernal_temp_max,
                                     #mallares_temp_max = data_temp_max[r,]$mallares_temp_max,
-                                    Esperanza_temp_max = data_temp_max[r,]$Esperanza_temp_max,
+                                    #Esperanza_temp_max = data_temp_max[r,]$Esperanza_temp_max,
                                    
           )
           
-          g[j] = predict(model_ctmax_8, data_predictora)
+          g[j] = predict(model_ctmax_12, data_predictora)
           print (g)
           
           

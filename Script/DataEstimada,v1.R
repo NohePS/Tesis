@@ -289,6 +289,5 @@ dif <- (chusis_byyear$rain_month - Bernal_byyear$rain_month )/Bernal_byyear$rain
 dif
 
 
-aranza
-rain_Bernal
-write.xlsx(data_temp_max, file = "DataTmax_v1.xlsx", colNames = TRUE)
+
+write.xlsx(data_temp_min, file = "DataTmin_v1.xlsx", colNames = TRUE)

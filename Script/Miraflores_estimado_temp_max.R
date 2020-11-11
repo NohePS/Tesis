@@ -29,7 +29,7 @@ library(gtools)
 miss_var_summary (data_temp_max)
 model_Mtmax_1 <- lm(miraflores_temp_max  ~   Esperanza_temp_max + mallares_temp_max + chusis_temp_max+
                       miguel_temp_max + UDEP_temp_max,
-                    data = data_temp_max)
+                    data = data_temp_max)#0.9214
 #model_Mtmax_2 <-  lm(miraflores_temp_max  ~   Esperanza_temp_max + mallares_temp_max + chusis_temp_max+
  #                    miguel_temp_max,
   #                data = data_temp_max)
@@ -54,7 +54,8 @@ model_Mtmax_10 <-lm(miraflores_temp_max  ~   mallares_temp_max + miguel_temp_max
                     data = data_temp_max) #0.8739
 model_Mtmax_11 <-lm(miraflores_temp_max  ~   chusis_temp_max + miguel_temp_max,
                     data = data_temp_max) #0.9043
-summary(model_Mtmax_11)
+
+summary(model_Mtmax_12)
 #Estimaciones con Cerritos
 
 
@@ -137,27 +138,27 @@ for (i in 1:49) {
       
       for (s in 1:12){
         if (data_temp_max$year[r]==n_datos$año[i] && data_temp_max$month[r]== s 
-            && is.na(data_temp_max$miguel_temp_max[r])==FALSE 
-            #&& is.na(data_temp_max$UDEP_temp_max[r])==FALSE 
+            #&& is.na(data_temp_max$miguel_temp_max[r])==FALSE 
+            && is.na(data_temp_max$UDEP_temp_max[r])==FALSE 
             #&&is.na(data_temp_max$chusis_temp_max[r])==FALSE 
             #&& is.na(data_temp_max$Bernal_temp_max[r])==FALSE
-            && is.na(data_temp_max$Esperanza_temp_max[r])==FALSE
+            #&& is.na(data_temp_max$Esperanza_temp_max[r])==FALSE
             #&& is.na(data_temp_max$mallares_temp_max[r])==FALSE
             
             && is.na(data_temp_max$miraflores_temp_max[r])==TRUE){
           j=j+1
-          model_Mtmax_4 <-lm(miraflores_temp_max ~   Esperanza_temp_max + miguel_temp_max+ mallares_temp_max,
-                             data = data_temp_max)
-          data_predictora <- tibble(#UDEP_temp_max = data_temp_max[r,]$UDEP_temp_max,
+          model_Mtmax_12 <-lm(chusis_temp_max  ~   miraflores_temp_max + UDEP_temp_max,
+                              data = data_temp_max)
+          data_predictora <- tibble(UDEP_temp_max = data_temp_max[r,]$UDEP_temp_max,
             miguel_temp_max = data_temp_max[r,]$miguel_temp_max,
-            #chusis_temp_max = data_temp_max[r,]$chusis_temp_max,
+            chusis_temp_max = data_temp_max[r,]$chusis_temp_max,
             #Bernal_temp_max = data_temp_max[r,]$Bernal_temp_max,
-            #mallares_temp_max = data_temp_max[r,]$mallares_temp_max,
+            mallares_temp_max = data_temp_max[r,]$mallares_temp_max,
             Esperanza_temp_max = data_temp_max[r,]$Esperanza_temp_max,
             
           )
           
-          g[j] = predict(model_Mtmax_4, data_predictora)
+          g[j] = predict(model_Mtmax_1, data_predictora)
           print (g)
           
           
