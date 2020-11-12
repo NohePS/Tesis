@@ -54,7 +54,11 @@ model_ctmin_8 <-lm(chusis_temp_min  ~   mallares_temp_min + miguel_temp_min,
                    data = data_temp_min) #0.9025
 model_ctmin_9 <-lm(chusis_temp_min  ~   miraflores_temp_min + miguel_temp_min,
                    data = data_temp_min) #0.8966
-summary(model_ctmin_1)
+model_ctmin_10 <-lm(chusis_temp_min  ~   miraflores_temp_min + UDEP_temp_min,
+                   data = data_temp_min)#0.9272
+model_ctmin_11 <-lm(chusis_temp_min  ~   miguel_temp_min + UDEP_temp_min,
+                    data = data_temp_min)#0.9147
+summary(model_ctmin_11)
 #Estimaciones con Cerritos
 
 
@@ -133,28 +137,28 @@ for (i in 1:49) {
     if (n_datos$valor[i]=="yes"){
       
       for (s in 1:12){
-        if (data_temp_min$year[r]==n_datos$año[i] && data_temp_min$month[r]== s #&& is.na(data_temp_min$miguel_temp_min[r])==FALSE 
+        if (data_temp_min$year[r]==n_datos$año[i] && data_temp_min$month[r]== s 
+            && is.na(data_temp_min$miguel_temp_min[r])==FALSE 
             && is.na(data_temp_min$UDEP_temp_min[r])==FALSE 
-            &&is.na(data_temp_min$miraflores_temp_min[r])==FALSE 
+            #&&is.na(data_temp_min$miraflores_temp_min[r])==FALSE 
             #&& is.na(data_temp_min$Bernal_temp_min[r])==FALSE
-            && is.na(data_temp_min$Esperanza_temp_min[r])==FALSE
+            #&& is.na(data_temp_min$Esperanza_temp_min[r])==FALSE
             #&& is.na(data_temp_min$mallares_temp_min[r])==FALSE
             
             && is.na(data_temp_min$chusis_temp_min[r])==TRUE){
           j=j+1
-          model_ctmin_1 <- lm(chusis_temp_min  ~   Esperanza_temp_min  + miraflores_temp_min+
-                                UDEP_temp_min,
+          model_ctmin_11 <-lm(chusis_temp_min  ~   miguel_temp_min + UDEP_temp_min,
                               data = data_temp_min)
           data_predictora <- tibble(UDEP_temp_min = data_temp_min[r,]$UDEP_temp_min,
-                                    #miguel_temp_min = data_temp_min[r,]$miguel_temp_min,
-                                    miraflores_temp_min = data_temp_min[r,]$miraflores_temp_min,
+                                    miguel_temp_min = data_temp_min[r,]$miguel_temp_min,
+                                    #miraflores_temp_min = data_temp_min[r,]$miraflores_temp_min,
                                     #Bernal_temp_min = data_temp_min[r,]$Bernal_temp_min,
                                     #mallares_temp_min = data_temp_min[r,]$mallares_temp_min,
-                                    Esperanza_temp_min = data_temp_min[r,]$Esperanza_temp_min,
+                                    #Esperanza_temp_min = data_temp_min[r,]$Esperanza_temp_min,
                                    
           )
           
-          g[j] = predict(model_ctmin_1, data_predictora)
+          g[j] = predict(model_ctmin_11, data_predictora)
           print (g)
           
           

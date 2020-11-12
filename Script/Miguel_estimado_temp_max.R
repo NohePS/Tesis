@@ -53,6 +53,8 @@ model_SMtmax_10 <-lm(miguel_temp_max  ~   mallares_temp_max + chusis_temp_max,
                     data = data_temp_max) #0.8616
 model_SMtmax_11 <-lm(miguel_temp_max  ~   miraflores_temp_max + chusis_temp_max,
                     data = data_temp_max) #0.8825
+model_SMtmax_12 <-lm(miguel_temp_max  ~   chusis_temp_max + UDEP_temp_max,
+                     data = data_temp_max)#0.8766
 # 0.9109
 summary(model_SMtmax_12)
 #Estimaciones con Cerritos
@@ -135,26 +137,26 @@ for (i in 1:49) {
       
       for (s in 1:12){
         if (data_temp_max$year[r]==n_datos$año[i] && data_temp_max$month[r]== s 
-            #&& is.na(data_temp_max$chusis_temp_max[r])==FALSE 
+            && is.na(data_temp_max$chusis_temp_max[r])==FALSE 
             && is.na(data_temp_max$UDEP_temp_max[r])==FALSE 
-            &&is.na(data_temp_max$miraflores_temp_max[r])==FALSE 
+            #&&is.na(data_temp_max$miraflores_temp_max[r])==FALSE 
             #&& is.na(data_temp_max$Bernal_temp_max[r])==FALSE
             #&& is.na(data_temp_max$Esperanza_temp_max[r])==FALSE
             #&& is.na(data_temp_max$mallares_temp_max[r])==FALSE
             && is.na(data_temp_max$miguel_temp_max[r])==TRUE){
           j=j+1
-          model_SMtmax_12 <-lm(miguel_temp_max  ~   miraflores_temp_max + UDEP_temp_max,
+          model_SMtmax_12 <-lm(miguel_temp_max  ~   chusis_temp_max + UDEP_temp_max,
                                data = data_temp_max)
           data_predictora <- tibble(UDEP_temp_max = data_temp_max[r,]$UDEP_temp_max,
-            #chusis_temp_max = data_temp_max[r,]$chusis_temp_max,
-            miraflores_temp_max = data_temp_max[r,]$miraflores_temp_max,
+            chusis_temp_max = data_temp_max[r,]$chusis_temp_max,
+            #miraflores_temp_max = data_temp_max[r,]$miraflores_temp_max,
             #Bernal_temp_max = data_temp_max[r,]$Bernal_temp_max,
             #mallares_temp_max = data_temp_max[r,]$mallares_temp_max,
             #Esperanza_temp_max = data_temp_max[r,]$Esperanza_temp_max,
             
           )
           
-          g[j] = predict(model_SMtmax_1, data_predictora)
+          g[j] = predict(model_SMtmax_12, data_predictora)
           print (g)
           
           

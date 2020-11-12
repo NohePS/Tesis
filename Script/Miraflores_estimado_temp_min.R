@@ -43,18 +43,23 @@ model_Mtmin_3 <-lm(miraflores_temp_min ~   Esperanza_temp_min + miguel_temp_min+
 #model_Mtmin_4 <-lm(miraflores_temp_min  ~   miguel_temp_min + chusis_temp_min+ mallares_temp_min,
  #                 data = data_temp_min) #
 model_Mtmin_4 <-lm(miraflores_temp_min  ~   Esperanza_temp_min + mallares_temp_min,
-                   data = data_temp_min)# 0.9271
+                   data = data_temp_min) #0.9271
 model_Mtmin_5 <-lm(miraflores_temp_min ~   Esperanza_temp_min + chusis_temp_min,
                   data = data_temp_min) #0.887
 model_Mtmin_6 <-lm(miraflores_temp_min  ~   Esperanza_temp_min + miguel_temp_min,
-                   data = data_temp_min)#0.9242
+                   data = data_temp_min) #0.9242
 model_Mtmin_7 <-lm(miraflores_temp_min  ~   mallares_temp_min + chusis_temp_min,
                    data = data_temp_min) #0.9696
 model_Mtmin_8 <-lm(miraflores_temp_min  ~   mallares_temp_min + miguel_temp_min,
                    data = data_temp_min) #0.9449
 model_Mtmin_9 <-lm(miraflores_temp_min  ~   chusis_temp_min + miguel_temp_min,
                    data = data_temp_min) #0.9095
-summary(model_Mtmin_1)
+model_Mtmin_10 <-lm(miraflores_temp_min  ~   UDEP_temp_min + Esperanza_temp_min + miguel_temp_min,
+                   data = data_temp_min) #0.9388
+model_Mtmin_11 <-lm(miraflores_temp_min  ~ chusis_temp_min + UDEP_temp_min + miguel_temp_min,
+                    data = data_temp_min) #0.9144
+
+summary(model_Mtmin_6)
 #Estimaciones con Cerritos
 
 
@@ -138,23 +143,22 @@ for (i in 1:49) {
             &&is.na(data_temp_min$chusis_temp_min[r])==FALSE 
             #&& is.na(data_temp_min$Bernal_temp_min[r])==FALSE
             #&& is.na(data_temp_min$Esperanza_temp_min[r])==FALSE
-            && is.na(data_temp_min$mallares_temp_min[r])==FALSE
+            #&& is.na(data_temp_min$mallares_temp_min[r])==FALSE
             
             && is.na(data_temp_min$miraflores_temp_min[r])==TRUE){
           j=j+1
-          model_Mtmin_1 <- lm(miraflores_temp_min  ~   mallares_temp_min + chusis_temp_min+
-                                miguel_temp_min + UDEP_temp_min,
-                              data = data_temp_min) 
+          model_Mtmin_11 <-lm(miraflores_temp_min  ~ chusis_temp_min + UDEP_temp_min + miguel_temp_min,
+                              data = data_temp_min)
           data_predictora <- tibble(UDEP_temp_min = data_temp_min[r,]$UDEP_temp_min,
             miguel_temp_min = data_temp_min[r,]$miguel_temp_min,
             chusis_temp_min = data_temp_min[r,]$chusis_temp_min,
             #Bernal_temp_min = data_temp_min[r,]$Bernal_temp_min,
-            mallares_temp_min = data_temp_min[r,]$mallares_temp_min,
+            #mallares_temp_min = data_temp_min[r,]$mallares_temp_min,
             #Esperanza_temp_min = data_temp_min[r,]$Esperanza_temp_min,
             
           )
           
-          g[j] = predict(model_Mtmin_1, data_predictora)
+          g[j] = predict(model_Mtmin_11, data_predictora)
           print (g)
           
           
