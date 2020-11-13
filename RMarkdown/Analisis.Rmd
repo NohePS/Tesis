@@ -1,0 +1,45 @@
+---
+title: "Analisis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Paquetes
+
+```{r}
+library(readxl)
+library(ggplot2)
+library(dplyr)
+```
+
+# Data
+
+```{r}
+datos_falt <- read_excel("../Data/Estimación_de_datos_faltantes.xlsx",
+                         sheet = "chusis")
+datos_falt
+```
+
+# EDA
+
+```{r}
+datos_falt %>% 
+  group_by(month) %>% 
+  summarise(mean = mean(temp_max))
+```
+
+De 1972 a 2015 (43)
+
+```{r}
+datos_falt %>% 
+  group_by(month) %>% 
+  summarise(mean = mean(temp_max)) %>% 
+  ggplot(aes(x = month, y = mean, label = round(mean, 1))) +
+  geom_line() +
+  scale_x_continuous(breaks = 1:12) +
+  geom_text(nudge_y = 1) +
+  labs(x = "Meses", y = "Temp")
+```
