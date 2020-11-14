@@ -28,18 +28,40 @@ datos_falt
 ```{r}
 datos_falt %>% 
   group_by(month) %>% 
-  summarise(mean = mean(temp_max))
+  summarise(mean_temp = mean(temp_max),
+            mean_rain = mean(rain))
 ```
 
 De 1972 a 2015 (43)
 
 ```{r}
+colors <- c("Temp" = "#D8B619", "Prec" = "black")
+
 datos_falt %>% 
   group_by(month) %>% 
-  summarise(mean = mean(temp_max)) %>% 
-  ggplot(aes(x = month, y = mean, label = round(mean, 1))) +
-  geom_line() +
+  summarise(mean_temp = mean(temp_max),
+            mean_rain = mean(rain)) %>% 
+  ggplot(aes(label = round(mean_temp, 1))) +
+  geom_bar(aes(x = month, y = mean_rain, color = "Temp"), stat = "identity", 
+           fill = "#D8B619", alpha = .85) +
+  geom_line(aes(x = month, y = mean_temp/2, color = "Prec")) +
+  geom_point(aes(x = month, y = mean_temp/2), size = 1.5)+
   scale_x_continuous(breaks = 1:12) +
-  geom_text(nudge_y = 1) +
-  labs(x = "Meses", y = "Temp")
+  scale_y_continuous(
+    breaks = seq(0, 30, 4),
+    name = "Temp",
+    sec.axis = sec_axis(~.*(0.5), name = "Precipitacion", 
+                        breaks = seq(0,15, 2))
+  ) +
+  # geom_text(aes(x = month, y = mean_temp), nudge_y = 1) +
+  labs(x = "Meses", title = "Temp y Prec de Chusis", 
+       caption = "Fuente: Yo\n*Datos desde 1972 a 2015",
+       color  = "Tipo") +
+  scale_color_manual(values = colors)
+```
+
+```{r}
+# Exportando ggplots
+ggsave(filename = "../Graficos/ejemplo.png",
+       plot = gplot_chusis)
 ```
