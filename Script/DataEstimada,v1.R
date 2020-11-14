@@ -114,51 +114,19 @@ cor_temp_min <- cor(data_temp_min[,3:9], use = "pairwise.complete.obs")
 #Modelos##############################
 
 
-#model_x1 <- lm(x1 ~ x2 + x3 + x4, data = df)
+#Estimaciones con regresion lineal simple para años 2016 y 2017 temperaturas
 
-y <- data_rain[13:588, ]$chusis_rain 
-z <- data_rain[13:588, ]$miguel_rain
-v <- data_rain[13:588, ]$miraflores_rain
-#Prueba Walter
-model_x1 <- lm(Bernal_rain  ~   UDEP_rain + miguel_rain + chusis_rain + miraflores_rain +0,
-               data = data_rain) 
-summary(model_x2)
-model_x2 <- lm(chusis_rain  ~ miraflores_rain + miguel_rain + UDEP_rain,
-               data = data_rain)
-model_x3 <- lm(miguel_rain  ~  chusis_rain + miguel_rain ,
-               data = data_rain)
-model_x4 <- lm(miraflores_rain  ~ chusis_rain + miguel_rain + UDEP_rain,
-               data = data_rain)
-model_x5 <- lm(UDEP_rain  ~ chusis_rain + miguel_rain +  miraflores_rain,
-               data = data_rain)
-model_y1 <- lm(Bernal_rain  ~ miraflores_rain + UDEP_rain + 0,
-               data = data_rain) 
-model_y2 <- lm(chusis_rain  ~ miraflores_rain + UDEP_rain +0,
-               data = data_rain)
-model_y3 <- lm(miguel_rain  ~  chusis_rain + UDEP_rain +0,
-               data = data_rain)
-model_y4 <- lm(miraflores_rain  ~ chusis_rain + miguel_rain + UDEP_rain +0,
-               data = data_rain)
-model_y5 <- lm(UDEP_rain  ~ chusis_rain + miguel_rain +  miraflores_rain +0 ,
-               data = data_rain)
+model_R1 <- lm (miguel_temp_max ~ UDEP_temp_max, data = data_temp_max)#Bernal 0.888,
+#chusis <- 0.7931, miguel <-  0.8235, miraflores <- 0.8004 
+data_expl <- tibble(UDEP_temp_max = 30.30)
+predict(model_R1, data_expl)
+summary(model_R1)
 
-anova(model_x1) 
-model_x1
-model_x2
-model_x3
-model_x4
-model_x5
-anova(model_x1) 
-anova(model_x3) 
-anova(model_x4) 
-anova(model_x5) 
-
-summary(model_x1)
-
-
-
-
-cor
+model_R1 <- lm (miguel_temp_min ~ UDEP_temp_min, data = data_temp_min)#Bernal 0.8681,
+#chusis <- 0.7902, miguel <-  0.7554, miraflores <- 0.655 
+data_expl <- tibble(UDEP_temp_min = 17.90)
+predict(model_R1, data_expl)
+summary(model_R1)
 #############################
 n=0  
 n <- c()
