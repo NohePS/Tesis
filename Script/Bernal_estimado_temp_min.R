@@ -55,7 +55,7 @@ model_Btmin_10 <- lm(Bernal_temp_min  ~    miguel_temp_min+
                       mallares_temp_min,
                     data = data_temp_min)#0.8863
 model_Btmin_12 <- lm(Bernal_temp_min  ~    UDEP_temp_min+ 
-                       miraflores_temp_min,
+                       chusis_temp_min,
                      data = data_temp_min)
 summary(model_Btmin_12)
 #Estimaciones con Cerritos
@@ -139,27 +139,27 @@ for (i in 1:49) {
       for (s in 1:12){
         if (data_temp_min$year[r]==n_datos$año[i] && data_temp_min$month[r]== s 
             #&& is.na(data_temp_min$chusis_temp_min[r])==FALSE 
-            #&& is.na(data_temp_min$UDEP_temp_min[r])==FALSE 
+            && is.na(data_temp_min$UDEP_temp_min[r])==FALSE 
             #&&is.na(data_temp_min$miraflores_temp_min[r])==FALSE 
-            && is.na(data_temp_min$miguel_temp_min[r])==FALSE
-            && is.na(data_temp_min$Esperanza_temp_min[r])==FALSE
-            #&& is.na(data_temp_min$mallares_temp_min[r])==FALSE
+            #&& is.na(data_temp_min$miguel_temp_min[r])==FALSE
+            #&& is.na(data_temp_min$Esperanza_temp_min[r])==FALSE
+            && is.na(data_temp_min$mallares_temp_min[r])==FALSE
             
             && is.na(data_temp_min$Bernal_temp_min[r])==TRUE){
           j=j+1
-          model_Btmin_9 <- lm(Bernal_temp_min  ~    miguel_temp_min+ 
-                                Esperanza_temp_min,
+          model_Btmin_5 <- lm(Bernal_temp_min  ~    UDEP_temp_min+ 
+                                mallares_temp_min,
                               data = data_temp_min)
-          data_predictora <- tibble(#UDEP_temp_min = data_temp_min[r,]$UDEP_temp_min,
+          data_predictora <- tibble(UDEP_temp_min = data_temp_min[r,]$UDEP_temp_min,
             #chusis_temp_min = data_temp_min[r,]$chusis_temp_min,
             #miraflores_temp_min = data_temp_min[r,]$miraflores_temp_min,
-            miguel_temp_min = data_temp_min[r,]$miguel_temp_min,
-            #mallares_temp_min = data_temp_min[r,]$mallares_temp_min,
-            Esperanza_temp_min = data_temp_min[r,]$Esperanza_temp_min,
+            #miguel_temp_min = data_temp_min[r,]$miguel_temp_min,
+            mallares_temp_min = data_temp_min[r,]$mallares_temp_min,
+            #Esperanza_temp_min = data_temp_min[r,]$Esperanza_temp_min,
             
           )
           
-          g[j] = predict(model_Btmin_9, data_predictora)
+          g[j] = predict(model_Btmin_5, data_predictora)
           print (g)
           
           

@@ -61,5 +61,7 @@ vis_miss(data_UDEP_na, sort_miss = TRUE)
 #Data Mensual a anual
 UDEP_byyear <- data_UDEP_na %>%
   group_by(year) %>%
-dplyr::  select(year:rain)%>%
-  summarise(rain_month = sum(rain))
+dplyr::  select(year:temp_min)%>%
+  summarise(rain_month = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min (temp_min))

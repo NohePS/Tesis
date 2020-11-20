@@ -35,16 +35,16 @@ datos_falt %>%
 De 1972 a 2015 (43)
 
 ```{r}
-colors <- c("Temp" = "#D8B619", "Prec" = "black")
+colors <- c("Prec" = "#D8B619", "Temp" = "black")
 
 datos_falt %>% 
   group_by(month) %>% 
   summarise(mean_temp = mean(temp_max),
             mean_rain = mean(rain)) %>% 
   ggplot(aes(label = round(mean_temp, 1))) +
-  geom_bar(aes(x = month, y = mean_rain, color = "Temp"), stat = "identity", 
+  geom_bar(aes(x = month, y = mean_rain, color = "Prec"), stat = "identity", 
            fill = "#D8B619", alpha = .85) +
-  geom_line(aes(x = month, y = mean_temp/2, color = "Prec")) +
+  geom_line(aes(x = month, y = mean_temp/2, color = "Temp")) +
   geom_point(aes(x = month, y = mean_temp/2), size = 1.5)+
   scale_x_continuous(breaks = 1:12) +
   scale_y_continuous(
@@ -57,7 +57,8 @@ datos_falt %>%
   labs(x = "Meses", title = "Temp y Prec de Chusis", 
        caption = "Fuente: Yo\n*Datos desde 1972 a 2015",
        color  = "Tipo") +
-  scale_color_manual(values = colors)
+  scale_color_manual(values = colors) +
+theme_bw()
 ```
 
 ```{r}

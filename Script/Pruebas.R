@@ -54,3 +54,15 @@ n_datos
 
 rain_meses <- data.frame(enero , marzo, Abril, mayo, junio, julio, agosto,
                          setiembre, Octubre, Noviembre, Diciembre)
+
+library(readxl)
+library(ggplot2)
+library(dplyr)
+UDEP_byyear
+datitos <- read_excel("Data/Estimación_de_datos_faltantes.xlsx",
+                         sheet = "UDEP")
+median(datito)
+hist(x = datitos$rain, breaks = 50)
+hist(x = datitos$temp_max,  breaks = 80)
+hist(x = UDEP_byyear$temp_min, breaks = 30)
+#curve(dnorm(x,300,50),xlim=c(0,60),col="blue",lwd=2,add=TRUE)

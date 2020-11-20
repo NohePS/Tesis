@@ -38,6 +38,7 @@ day_Bernal = data_Bernal[,3]
 rain_Bernal = data_Bernal[,4]
 temp_max_Bernal = data_Bernal[,5]
 temp_min_Bernal = data_Bernal[,6]
+temp_med_Bernal = data_Bernal[,7]
 
 data_Bernal
 
@@ -89,10 +90,11 @@ head(data_Bernal_na)
 
 Bernal_bymonth <- data_Bernal_na %>%
   group_by(year, month) %>%
-  select(year : temp_min)%>%
+  select(year : temp_med)%>%
   summarise(rain_month = sum(rain),
             max_temp_max = max(temp_max),
-            min_temp_min = min(temp_min))
+            min_temp_min = min(temp_min),
+            med_temp_med = mean(temp_med))
 #mean_temp_max = mean(temp_max_Bernal))
 head(data_Bernal_na$rain)
 
@@ -100,10 +102,11 @@ head(data_Bernal_na$rain)
 
 Bernal_byyear <- Bernal_bymonth %>%
   group_by(year) %>%
-  select(year:min_temp_min)%>%
+  select(year:med_temp_med)%>%
   summarise(rain_month = sum(rain_month),
             max_temp_max = max(max_temp_max),
-            min_temp_min = min(min_temp_min))
+            min_temp_min = min(min_temp_min),
+            med_temp_med = mean(med_temp_med))
 
 
 write.xlsx(Bernal_bymonth, file = "Bernal_mes_v1.xlsx", colNames = TRUE)
