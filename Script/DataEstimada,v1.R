@@ -42,34 +42,6 @@ cor_rain <- cor(data_rain[,3:10], use = "pairwise.complete.obs")
 
 correlacion <- cor(data_rain[,3:7], use = "pairwise.complete.obs")
 
-#Generar data frames por mes uniendo todas las estaciones 
-#Enero 
-
-
-
-#Estimar por mes Octubre del 2004 de chusis por Bernal
-
-lm_Chusis_Bernal_octubre<- lm(Chusis_octubre$rain_month ~  Bernal_octubre$rain_month)
-lm_Chusis_Bernal_octubre
-
-
-
-#Estimas con funciwón Impute_lm
-imp_Chusis_Bernal_octubre<- 
-  Octubre %>%
-  bind_shadow()%>%
-  add_label_missings() %>%
-  impute_lm(chusis_rain_oct ~  Bernal_rain_oct)
-imp_Chusis_Bernal_octubre
-# Using popdata, plot response vs. explanatory
-ggplot(mi_df, aes(x =Bernal_bymonth$rain_month , y = chusis_bymonth$rain_month)) + 
-  # Add a point layer
-  geom_point() + 
-  # Add a smooth trend layer, using lin. reg., no ribbon
-  geom_smooth(method = "lm", se = FALSE) 
-
-
-
 #Prueba para código predictor para años de estaciones con menos de 5 mese con NA
 
 #for (i in names(Bernal_bymonth)){
@@ -108,6 +80,16 @@ data_temp_min <- data.frame(year = Miguel_bymonth$year, month = Miguel_bymonth$m
 
 cor_temp_min <- cor(data_temp_min[,3:9], use = "pairwise.complete.obs")
 
+data_temp_med <- data.frame(year = Miguel_bymonth$year, month = Miguel_bymonth$month, 
+                            Bernal_temp_med = Bernal_t$med_temp_med, 
+                            chusis_temp_med = Chusis_t$med_temp_med,
+                            miraflores_temp_med = miraflores_bymonth$med_temp_med,
+                            miguel_temp_med =  Miguel_bymonth$med_temp_med,
+                            Esperanza_temp_med= Esperanza_bymonth$med_temp_med,
+                            mallares_temp_med = Mallares_bymonth$med_temp_med,
+                            UDEP_temp_med = data_UDEP_na[1:588,]$temp_med,
+                            data_faltante)
+cor_temp_med <- cor(data_temp_med[,3:9], use = "pairwise.complete.obs")
 
 
 
@@ -116,9 +98,9 @@ cor_temp_min <- cor(data_temp_min[,3:9], use = "pairwise.complete.obs")
 
 #Estimaciones con regresion lineal simple para años 2016 y 2017 temperaturas
 
-model_R1 <- lm (miguel_temp_max ~ UDEP_temp_max, data = data_temp_max)#Bernal 0.888,
+model_R1 <- lm (miguel_temp_med~ UDEP_temp_med, data = data_temp_med)#Bernal 0.888,
 #chusis <- 0.7931, miguel <-  0.8235, miraflores <- 0.8004 
-data_expl <- tibble(UDEP_temp_max = 30.30)
+data_expl <- tibble(UDEP_temp_med = 22.31)
 predict(model_R1, data_expl)
 summary(model_R1)
 
