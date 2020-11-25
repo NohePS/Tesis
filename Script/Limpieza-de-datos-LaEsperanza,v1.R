@@ -38,7 +38,7 @@ day_Esperanza = data_Esperanza[,3]
 rain_Esperanza = data_Esperanza[,4]
 temp_max_Esperanza = data_Esperanza[,5]
 temp_min_Esperanza = data_Esperanza[,6]
-
+temp_med_Esperanza = data_Esperanza[,7]
 data_Esperanza
 
 # Verificar máximos y mínimos
@@ -89,10 +89,11 @@ head(data_Esperanza_na)
 
 Esperanza_bymonth <- data_Esperanza_na %>%
   group_by(year, month) %>%
-  select(year : temp_min)%>%
+  select(year : temp_med)%>%
   summarise(rain_month = sum(rain),
             max_temp_max = max(temp_max),
-            min_temp_min = min(temp_min))
+            min_temp_min = min(temp_min),
+            med_temp_med = mean(temp_med))
 #mean_temp_max = mean(temp_max_Esperanza))
 head(data_Esperanza_na$rain)
 
@@ -100,7 +101,9 @@ head(data_Esperanza_na$rain)
 
 Esperanza_byyear <- Esperanza_bymonth %>%
   group_by(year) %>%
-  select(year:min_temp_min)%>%
+  select(year:med_temp_med)%>%
   summarise(rain_month = sum(rain_month),
             max_temp_max = max(max_temp_max),
-            min_temp_min = min(min_temp_min))
+            min_temp_min = min(min_temp_min),
+            med_temp_med = mean(med_temp_med))
+write.xlsx(Esperanza_bymonth, file = "LaEsperanza_mes_v1.xlsx", colNames = TRUE)

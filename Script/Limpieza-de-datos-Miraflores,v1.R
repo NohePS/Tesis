@@ -39,6 +39,7 @@ day_miraflores = data_miraflores[,3]
 rain_miraflores = data_miraflores[,4]
 temp_max_miraflores = data_miraflores[,5]
 temp_min_miraflores = data_miraflores[,6]
+temp_med_miraflores = data_miraflores[,7]
 
 data_miraflores
 
@@ -89,10 +90,11 @@ head(data_miraflores_na)
 
 miraflores_bymonth <- data_miraflores_na %>%
   group_by(year, month) %>%
-  select(year : temp_min)%>%
+  select(year : temp_med)%>%
   summarise(rain_month = sum(rain),
             max_temp_max = max(temp_max),
-            min_temp_min = min(temp_min))
+            min_temp_min = min(temp_min),
+            med_temp_med = mean(temp_med))
 #mean_temp_max = mean(temp_max_miraflores))
 head(data_miraflores_na$rain)
 
@@ -100,9 +102,10 @@ head(data_miraflores_na$rain)
 
 miraflores_byyear <- miraflores_bymonth %>%
   group_by(year) %>%
-  select(year:min_temp_min)%>%
+  select(year:med_temp_med)%>%
   summarise(rain_month = sum(rain_month),
             max_temp_max = max(max_temp_max),
-            min_temp_min = min(min_temp_min))
+            min_temp_min = min(min_temp_min),
+            med_temp_med = mean(med_temp_med))
 
 write.xlsx(miraflores_bymonth, file = "miraflores_mes_v1.xlsx", colNames = TRUE)

@@ -42,6 +42,7 @@ month_UDEP = data_UDEP[,2]
 rain_UDEP = data_UDEP[,3]
 temp_max_UDEP = data_UDEP[,4]
 temp_min_UDEP = data_UDEP[,5]
+temp_med_UDEP = data_UDEP[,6]
 
 head(data_UDEP)
 
@@ -61,7 +62,9 @@ vis_miss(data_UDEP_na, sort_miss = TRUE)
 #Data Mensual a anual
 UDEP_byyear <- data_UDEP_na %>%
   group_by(year) %>%
-dplyr::  select(year:temp_min)%>%
+dplyr::  select(year:temp_med)%>%
   summarise(rain_month = sum(rain),
             temp_max = max(temp_max),
-            temp_min = min (temp_min))
+            temp_min = min (temp_min),
+            temp_med = mean(temp_med))
+write.xlsx(data_UDEP_na, file = "UDEP_mes_v1.xlsx", colNames = TRUE)

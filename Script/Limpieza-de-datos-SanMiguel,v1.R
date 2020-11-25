@@ -39,6 +39,7 @@ day_Miguel = data_Miguel[,3]
 rain_Miguel = data_Miguel[,4]
 temp_max_Miguel = data_Miguel[,5]
 temp_min_Miguel = data_Miguel[,6]
+temp_med_Miguel = data_Miguel[,7]
 
 head(data_Miguel)
 
@@ -90,10 +91,11 @@ head(data_Miguel_na)
 
 Miguel_bymonth <- data_Miguel_na %>%
   group_by(year, month) %>%
-dplyr::  select(year:temp_min)%>%
+dplyr::  select(year:temp_med)%>%
   summarise(rain_month = sum(rain),
             max_temp_max = max(temp_max),
-            min_temp_min = min(temp_min))
+            min_temp_min = min(temp_min),
+            med_temp_med = mean(temp_med))
 #mean_temp_max = mean(temp_max_Miguel))
 head(data_Miguel_na$rain)
 
@@ -101,10 +103,11 @@ head(data_Miguel_na$rain)
 
 Miguel_byyear <- Miguel_bymonth %>%
   group_by(year) %>%
-  dplyr::  select(year: min_temp_min)%>%
+  dplyr::  select(year: med_temp_med)%>%
   summarise(rain_month = sum(rain_month),
             max_temp_max = max(max_temp_max),
-            min_temp_min = min(min_temp_min))
+            min_temp_min = min(min_temp_min),
+            med_temp_med = mean(med_temp_med))
 
 #Exporta a excel
 write.xlsx(Miguel_bymonth, file = "Miguel_mes_v1.xlsx", colNames = TRUE)

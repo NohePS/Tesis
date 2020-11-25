@@ -46,7 +46,7 @@ day_chusis = data_chusis[,3]
 rain_chusis = data_chusis[,4]
 temp_max_chusis = data_chusis[,5]
 temp_min_chusis = data_chusis[,6]
-
+temp_med_chusis = data_chusis[,7]
 head(data_chusis)
 
 # Verificar máximos y mínimos
@@ -97,10 +97,11 @@ head(data_chusis_na)
 
 chusis_bymonth <- data_chusis_na %>%
   group_by(year, month) %>%
-  select(year:temp_min)%>%
+  select(year:temp_med)%>%
   summarise(rain_month = sum(rain),
             max_temp_max = max(temp_max),
-            min_temp_min = min(temp_min))
+            min_temp_min = min(temp_min),
+            med_temp_med = mean(temp_med))
             #mean_temp_max = mean(temp_max_chusis))
 head(chusis_bymonth)
 
@@ -108,13 +109,12 @@ head(chusis_bymonth)
 
 chusis_byyear <- chusis_bymonth %>%
   group_by(year) %>%
-  select(year:min_temp_min)%>%
+  select(year:med_temp_med)%>%
   summarise(rain_month = sum(rain_month),
             max_temp_max = max(max_temp_max),
-            min_temp_min = min(min_temp_min))
+            min_temp_min = min(min_temp_min),
+            med_temp_med = mean(med_temp_med))
 
-?autoplot
-lines(y=chusis_byyear$rain_month, x= chusis_byyear$year)
 #Exportar
 
 write.xlsx(chusis_bymonth, file = "Chusis_mes_v1.xlsx", colNames = TRUE)
