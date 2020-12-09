@@ -75,7 +75,7 @@ model_C17 <- lm(chusis_rain  ~   UDEP_rain + cerritos_rain,
 
 
 
-summary(model_C18)
+summary(model_C17)
 
 ############Código de estimación###################
 n=0  
@@ -155,20 +155,20 @@ for (i in 1:49) {
             && is.na(data_rain$UDEP_rain[r])==FALSE 
             #&&is.na(data_rain$miraflores_rain[r])==FALSE 
             #&& is.na(data_rain$Bernal_rain[r])==FALSE
-            && is.na(data_rain$Esperanza_rain[r])==FALSE
+            #&& is.na(data_rain$Esperanza_rain[r])==FALSE
             #&& is.na(data_rain$mallares_rain[r])==FALSE
-            #&& is.na(data_rain$cerritos_rain[r])==FALSE
+            && is.na(data_rain$cerritos_rain[r])==FALSE
             && is.na(data_rain$chusis_rain[r])==TRUE){
           j=j+1
-          model_C17 <- lm(chusis_rain  ~   UDEP_rain + Esperanza_rain,
+          model_C17 <- lm(chusis_rain  ~   UDEP_rain + cerritos_rain,
                           data = data_rain)
           data_predictora <- tibble(UDEP_rain = data_rain[r,]$UDEP_rain,
             #miguel_rain = data_rain[r,]$miguel_rain,
             #miraflores_rain = data_rain[r,]$miraflores_rain,
             #Bernal_rain = data_rain[r,]$Bernal_rain,
             #mallares_rain = data_rain[r,]$mallares_rain,
-            Esperanza_rain = data_rain[r,]$Esperanza_rain,
-            #cerritos_rain = data_rain[r,]$cerritos_rain
+            #Esperanza_rain = data_rain[r,]$Esperanza_rain,
+            cerritos_rain = data_rain[r,]$cerritos_rain
           )
           
           g[j] = predict(model_C17, data_predictora)
