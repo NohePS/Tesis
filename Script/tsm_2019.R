@@ -125,35 +125,45 @@ TSM_mes <- df_P%>%
             tsm_max = max(tsm),
             tsm_min = min(tsm))
 
+meses <- factor (c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago","Sep","Oct", "Nov", "Dic"))
+
+TSM_mes_1 <- cbind(TSM_mes,meses)
+
+TSM_mes_1$meses = factor(TSM_mes_1$meses, levels=c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago","Sep","Oct", "Nov", "Dic"))
+
 
 colors <- c( "T. máxima" = "red", "T. mínima" = "blue", "T. media" = "green")
 
-ggplot(TSM_mes,aes(label = round(tsm_max, 1))) +
-  geom_line(aes(x = mes, y = tsm_max, color = "T. máxima")) +
-  geom_line(aes(x = mes, y = tsm_min, color = "T. mínima"))+
-  geom_line(aes(x = mes, y = tsm_mean, color = "T. media"))+
-  geom_point(aes(x = mes, y = tsm_max), size = 1.5)+
-  geom_point(aes(x = mes, y = tsm_min), size = 1.5)+
-  geom_point(aes(x = mes, y = tsm_mean), size = 1.5)+
-  scale_x_continuous(breaks = 1:12) +
+TSM_graf <-ggplot(TSM_mes_1,aes(label = round(tsm_max, 1),group = 1)) +
+  geom_line(aes(x = meses, y = tsm_max, color = "T. máxima")) +
+  geom_line(aes(x = meses, y = tsm_min, color = "T. mínima"))+
+  geom_line(aes(x = meses, y = tsm_mean, color = "T. media"))+
+  geom_point(aes(x = meses, y = tsm_max), size = 1.5)+
+  geom_point(aes(x = meses, y = tsm_min), size = 1.5)+
+  geom_point(aes(x = meses, y = tsm_mean), size = 1.5)+
+  #scale_x_continuous(breaks = 1:12) +
   scale_y_continuous(
     breaks = seq(10,40 ,2),
     name = "Temperatura (°C)"  ) +
  #   sec.axis = sec_axis(~.*(2), name = "Precipitación (mm)" ,
               #          breaks = seq(0,80, 10)
   # geom_text(aes(x = month, y = mean_temp), nudge_y = 1) +
-  labs(x = "Meses", title =  "Temperatura superficial del Mar- Paita", 
+  labs(x = "Meses", title =  "Temperatura superficial del Mar - Paita-1963-2019 ", 
        # caption = "Fuente: Yo\n*Datos desde 1991 a 2019",
-       color  = "Leyenda"
+       color  = ""
   ) +
   scale_color_manual(values = colors) +
   theme_bw()
+
+TSM_graf + theme(legend.position="bottom") + guides(fill = guide_legend(nrow = 1))
+
+
 
 ###Gráfico diario 1963-2014#######################################
 
 colors <- c( "T. máxima" = "red", "T. mínima" = "blue", "T. media" = "green")
 
-ggplot(data_tsm_dia,aes(label = round(tsm_max, 1))) +
+tsm_gg <- ggplot(data_tsm_dia,aes(label = round(tsm_max, 1))) +
   geom_line(aes(x = dia, y = tsm_max, color = "T. máxima")) +
   geom_line(aes(x = dia, y = tsm_min, color = "T. mínima"))+
   geom_line(aes(x = dia, y = tsm_mean, color = "T. media"))+
@@ -167,14 +177,18 @@ ggplot(data_tsm_dia,aes(label = round(tsm_max, 1))) +
   #   sec.axis = sec_axis(~.*(2), name = "Precipitación (mm)" ,
   #          breaks = seq(0,80, 10)
   # geom_text(aes(x = month, y = mean_temp), nudge_y = 1) +
-  labs(x = "Días", title =  "Promedio diario de Temperatura superficial del mar en Paita", 
+  labs(x = "Días", title =  "Promedio diario de Temperatura superficial del mar en Paita 1963-2019", 
        # caption = "Fuente: Yo\n*Datos desde 1991 a 2019",
-       color  = "Leyenda"
+       color  = ""
   ) +
   scale_color_manual(values = colors) +
   theme_bw()
+tsm_gg + theme(legend.position="bottom") + guides(fill = guide_legend(nrow = 1))
 
 ###Gráfico de anomalías##############################
+###WALTER <-  Consultas del gráfico para el color y leyenda- Revisión de código 
+
+
 anomalia = c()
 year_AN = c()
 mes = c()
@@ -237,7 +251,7 @@ gg_an_rain <- ggplot(AN_vs_Rain,aes (label = round(anomalia, 1))) +
     sec.axis = sec_axis(~(.+4)*50, name = "Precipitación (mm)" ,
            breaks = seq(0,800, 100)))+
   # geom_text(aes(x = month, y = mean_temp), nudge_y = 1) +
-  labs(x = "Años", title =  "Anomalías mensuales de Temperatura superficial del mar en Paita", 
+  labs(x = "Años", title =  "Anomalías mensuales de la TSM en Paita", 
        # caption = "Fuente: Yo\n*Datos desde 1991 a 2019",
        color  = "Leyenda"
   ) +
@@ -245,25 +259,26 @@ gg_an_rain <- ggplot(AN_vs_Rain,aes (label = round(anomalia, 1))) +
   theme_bw()
 gg_an_rain
 gg_an_rain$layers[[2]] <- geom_segment(mapping = aes(x = fecha, y = rain / 50 -4, xend = fecha, yend = -4
-                                                     ),
-                                       size = 1.2) 
-  gg_an_rain+ scale_fill_gradient(name = "Leyenda", labels = c('Anomalías', 'Precipitación'), values = colors) 
-  
+                                                     ),size = 1.2) 
+gg_an_rain+ scale_fill_gradient(name = "Leyenda", labels = c('Anomalías', 'Precipitación'), values = colors) 
 gg_an_rain + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
+
+
 ########TSM VS LLUVIA############################
+##WALTER <- ecuación 
 TSM_vs_Rain <- data.frame(year = df_P[109:684,]$year_tsm, mes = df_P[109:684,]$mes,
                           tsm =df_P[109:684,]$tsm,rain = chusis_estimado$rain,
                           fecha = make_date(year =  df_P[109:684,]$year_tsm, month =df_P[109:684,]$mes )) 
-model_tsm_rain <- lm.fit (log(tsm) ~ log(rain), data = TSM_vs_Rain)
+model_tsm_rain <- lm.fit (tsm ~ rain, data = TSM_vs_Rain)
 
 summary(model_tsm_rain)
 
-ggplot(TSM_vs_Rain, aes(x = log(tsm), y =log(rain))) + geom_point() 
+ggplot(TSM_vs_Rain, aes(x = tsm, y =rain)) + geom_point() 
 
 write.xlsx(TSM_vs_Rain, file = "TSM_vs_Rain.xlsx", colNames = TRUE)
 
 
-#####Anomalías de TSM#####################
+
 
 
