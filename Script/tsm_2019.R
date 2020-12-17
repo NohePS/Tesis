@@ -17,6 +17,7 @@ library(ggplot2)
 library(assertive)
 library(naniar)
 library(lubridate)
+library(readxl)
 #library(xlsx)
 library(graphics)
 library(base)
@@ -31,6 +32,11 @@ path_tsm
 # Leer all data de Chusis
 data_tsm = read.xlsx(path_tsm, sheet='TSM_2019',startRow=2,colNames=TRUE)
 
+# Modo de Walter
+data_tsm <- read_excel("./Data/Paita.xlsx", sheet = 'TSM_2019', skip = 1)
+data_tsm <- data_tsm %>% 
+  mutate(fecha = dmy(fecha))
+
 # Revisar el tipo de data
 dtype = sapply(data_tsm, class)
 dtype
@@ -40,9 +46,8 @@ data_tsm = as.data.frame( apply(data_tsm, 2, as.numeric))
 data_1 = make_date(data_tsm[,1]) 
 data_1 = mdy (data_tsm[,1]) 
 data_1
+
 #Separar fecha y hora
-
-
 data_2 <- mutate(data_tsm,d1=substr(fecha,7,8),mes=substr(fecha,1,2),dia=substr(fecha,4,5), year= paste("20",d1,sep=""))
 head(data_2)
 
@@ -283,6 +288,7 @@ gg_an_rain
 
 
 ########TSM VS LLUVIA############################
+<<<<<<< HEAD
 ##Essperar opinión del Ingeniero
 #Para UDEP 337 Y demás estaciones empieza df_P en 109
 TSM_vs_Rain <- data.frame(year = df_P[337:684,]$year_tsm, mes = df_P[337:684,]$mes,
@@ -300,8 +306,37 @@ ggplot(TSM_vs_Rain, aes(x = tsm, y =rain)) + geom_point() +geom_smooth(method = 
   scale_y_continuous(breaks = seq(0,800, 100))+
   geom_vline(xintercept=24, color = "red")+
   geom_vline(xintercept=21, color = "green")+ theme_bw()
+=======
+##WALTER <- ecuación 
+TSM_vs_Rain <- data.frame(year = df_P[109:684,]$year_tsm, 
+                          mes = df_P[109:684,]$mes,
+                          tsm =df_P[109:684,]$tsm,
+                          rain = chusis_estimado$rain,
+                          fecha = make_date(year =  df_P[109:684,]$year_tsm,
+                                            month =df_P[109:684,]$mes )) 
+
+model_tsm_rain <- lm.fit(tsm ~ rain, data = TSM_vs_Rain)
+
+summary(model_tsm_rain)
+
+ggplot(TSM_vs_Rain, aes(x = tsm, y =rain)) + 
+  geom_point() 
+>>>>>>> 7290bd547166e217ee92d28bc3f84075dc521c77
 
 
+# Modo de Walter
+tsm_rain <- TSM_vs_Rain %>% 
+  as_tibble() %>% 
+  mutate(rain = rain + 1)
+
+# Coeficientes de un modelo potencial y = a*x^b ~ log(y) = log(a) + b.log(x)
+lm(log(rain) ~ log(tsm), data = tsm_rain)
+
+tsm_rain %>%
+  mutate(y_est = exp(-13.467) * rain ^ 4.807) %>%
+  ggplot(aes(x = tsm, y = rain)) +
+  geom_point() +
+  geom_line(aes(x = tsm, y = y_est), col = "blue") 
 
 ####Modo Walter
 
