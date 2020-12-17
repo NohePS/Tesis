@@ -62,7 +62,8 @@ model_ctmed_11 <-lm(chusis_temp_med  ~   miguel_temp_med + UDEP_temp_med +mallar
                     data = data_temp_med)
 summary(model_ctmed_11)
 #Estimaciones con Cerritos
-
+par(mfrow = c(2, 2))
+plot(model_ctmed_11)
 
 
 ############Código de estimación###################

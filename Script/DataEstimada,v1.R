@@ -36,7 +36,7 @@ df_estaciones <- data.frame(estaciones_year,
   UDEP_byyear$rain_month, cerritos_byyear$rain_month )
 
 #Estimación por año
-cor_rain <- cor(data_rain[,3:10], use = "pairwise.complete.obs")
+cor_rain <- cor(data_rain[13:588,3:10], use = "pairwise.complete.obs")
 
 
 
@@ -67,7 +67,7 @@ data_temp_max <- data.frame(year = Miguel_bymonth$year, month = Miguel_bymonth$m
                         mallares_temp_max = Mallares_bymonth$max_temp_max,
                         UDEP_temp_max = data_UDEP_na[1:588,] $temp_max,
                         data_faltante)
-cor_temp_max <- cor(data_temp_max[,3:9], use = "pairwise.complete.obs")
+cor_temp_max <- cor(data_temp_max[13:588,3:9], use = "pairwise.complete.obs")
 data_temp_min <- data.frame(year = Miguel_bymonth$year, month = Miguel_bymonth$month, 
                             Bernal_temp_min = Bernal_t$min_temp_min, 
                             chusis_temp_min = Chusis_t$min_temp_min,
@@ -78,7 +78,7 @@ data_temp_min <- data.frame(year = Miguel_bymonth$year, month = Miguel_bymonth$m
                             UDEP_temp_min = data_UDEP_na[1:588,]$temp_min,
                             data_faltante)
 
-cor_temp_min <- cor(data_temp_min[,3:9], use = "pairwise.complete.obs")
+cor_temp_min <- cor(data_temp_min[13:588,3:9], use = "pairwise.complete.obs")
 
 data_temp_med <- data.frame(year = Miguel_bymonth$year, month = Miguel_bymonth$month, 
                             Bernal_temp_med = Bernal_t$med_temp_med, 
@@ -89,7 +89,8 @@ data_temp_med <- data.frame(year = Miguel_bymonth$year, month = Miguel_bymonth$m
                             mallares_temp_med = Mallares_bymonth$med_temp_med,
                             UDEP_temp_med = data_UDEP_na[1:588,]$temp_med,
                             data_faltante)
-cor_temp_med <- cor(data_temp_med[,3:9], use = "pairwise.complete.obs")
+####correlaciones con data faltante
+cor_temp_med <- cor(data_temp_med[13:588,3:9], use = "pairwise.complete.obs")
 
 
 
@@ -240,4 +241,4 @@ dif
 
 
 
-write.xlsx(data_temp_min, file = "DataTmin_v1.xlsx", colNames = TRUE)
+write.xlsx(data_rain, file = "DataTmin_v1.xlsx", colNames = TRUE)

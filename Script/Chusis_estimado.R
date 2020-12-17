@@ -23,9 +23,9 @@ library(MASS)
 library(mosaicData)
 library(simputation)
 library(gtools)
+library(ggthemes) 
 
-
-
+install.packages("ggthemes")
 
 #############Modelos de chusis#########################################
 
@@ -66,7 +66,7 @@ model_C16 <- lm(chusis_rain  ~   UDEP_rain + Esperanza_rain,
                #W#  data = data_rain)
       
             
-summary(model_C17)
+summary(model_C1)
 #Estimaciones con Cerritos
 
 
@@ -76,6 +76,13 @@ model_C17 <- lm(chusis_rain  ~   UDEP_rain + cerritos_rain,
 
 
 summary(model_C17)
+anova(model_C1)
+model_C1$residuals 
+par(mfrow = c(2, 2))
+plot(model_C16)
+ggpairs(data_temp_max[13:588,3:9], lower = list(continuous = "smooth"),
+        diag = list(continuous = "barDiag"), axisLabels = "none")
+
 
 ############Código de estimación###################
 n=0  

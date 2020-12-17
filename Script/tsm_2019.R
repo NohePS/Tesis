@@ -9,6 +9,8 @@ setwd("C:/R/Tesis")
 
 ##Cargar librerias)
 
+library(gridExtra)
+library(grid)
 library(openxlsx)
 library(dplyr)
 library(ggplot2)
@@ -19,6 +21,7 @@ library(lubridate)
 library(graphics)
 library(base)
 library(ggfortify)
+
 
 ## Desarrollo -----------------------------------------------------------------------------
 
@@ -126,7 +129,6 @@ TSM_mes <- df_P%>%
             tsm_min = min(tsm))
 
 meses <- factor (c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago","Sep","Oct", "Nov", "Dic"))
-
 TSM_mes_1 <- cbind(TSM_mes,meses)
 
 TSM_mes_1$meses = factor(TSM_mes_1$meses, levels=c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago","Sep","Oct", "Nov", "Dic"))
@@ -159,6 +161,22 @@ TSM_graf + theme(legend.position="bottom") + guides(fill = guide_legend(nrow = 1
 
 
 
+
+#####Gráfico de tsm FEN####
+FEN_tsm_83 <- df_P[237:248,]
+FEN_tsm_98 <- df_P[417:428,]
+FEN_tsm_17 <- df_P[645:656,]
+Fen <- cbind(FEN_tsm_83, tsm_98 = FEN_tsm_98$tsm,tsm_17 = FEN_tsm_17$tsm,
+             fecha = make_date(year = FEN_tsm_98$year_tsm, 
+                               month =FEN_tsm_98$mes))
+
+
+colors <- c( "FEN 1982-1983" = "brown", "FEN 1997-1998" = "purple", "FEN 2016-2017" = "orange")
+
+
+
+
+
 ###Gráfico diario 1963-2014#######################################
 
 colors <- c( "T. máxima" = "red", "T. mínima" = "blue", "T. media" = "green")
@@ -177,7 +195,7 @@ tsm_gg <- ggplot(data_tsm_dia,aes(label = round(tsm_max, 1))) +
   #   sec.axis = sec_axis(~.*(2), name = "Precipitación (mm)" ,
   #          breaks = seq(0,80, 10)
   # geom_text(aes(x = month, y = mean_temp), nudge_y = 1) +
-  labs(x = "Días", title =  "Promedio diario de Temperatura superficial del mar en Paita 1963-2019", 
+  labs(x = "Días", title =  "Promedio diario de Temperatura superficial del mar en Paita 1985-2014", 
        # caption = "Fuente: Yo\n*Datos desde 1991 a 2019",
        color  = ""
   ) +
@@ -236,14 +254,10 @@ colors <- c( "Anomalías" = "red", "Precipitación" = "blue")
 
 gg_an_rain <- ggplot(AN_vs_Rain,aes (label = round(anomalia, 1))) +
   geom_line(aes(x = fecha, y = anomalia, color = "Anomalías")) +
-#ggplot(chusis_estimado,aes (label = round(rain, 1))) +
-  geom_bar(aes(x = fecha, (y = rain/50 -4), color = "Precipitación"), stat = "identity", 
-           fill = "#84c6ed", alpha = .85)+
-  #geom_line(aes(x = dia, y = tsm_mean, color = "T. media"))+
-  #geom_point(aes(x = dia, y = tsm_max), size = 0.1)+
-  #geom_point(aes(x = dia, y = tsm_min)t, size = 0.1)+
-  #geom_point(aes(x = dia, y = tsm_mean), size = 0.1)+
-  scale_x_date(date_labels = "%Y", breaks = seq.Date(as.Date("1972-01-01"), as.Date("2019-12-1"),
+  geom_bar(aes(x = fecha, (y = rain/50 -4), color = "Precipitación"), 
+           stat = "identity",  alpha = .85)+
+  scale_x_date(date_labels = "%Y", breaks = seq.Date(as.Date("1972-01-01"), 
+                                                     as.Date("2019-12-1"),
  by = "1 year")) +
   scale_y_continuous(
     breaks = seq(-4,12,2),
@@ -256,29 +270,367 @@ gg_an_rain <- ggplot(AN_vs_Rain,aes (label = round(anomalia, 1))) +
        color  = "Leyenda"
   ) +
   scale_color_manual(values = colors) +
-  theme_bw()
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  theme(legend.position="bottom") + guides(fill = guide_legend(nrow = 1))
+ # scale_fill_gradient(name = "Leyenda", labels = c('Anomalías', 'Precipitación'), values = colors) 
 gg_an_rain
-gg_an_rain$layers[[2]] <- geom_segment(mapping = aes(x = fecha, y = rain / 50 -4, xend = fecha, yend = -4
-                                                     ),size = 1.2) 
-gg_an_rain+ scale_fill_gradient(name = "Leyenda", labels = c('Anomalías', 'Precipitación'), values = colors) 
-gg_an_rain + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+gg_an_rain$layers[[2]] <- geom_segment(mapping = aes(x = fecha, y = rain / 50 -4, 
+                                              xend = fecha, yend = -4),size = 1.2) 
+gg_an_rain 
+ 
 
 
 
 ########TSM VS LLUVIA############################
-##WALTER <- ecuación 
-TSM_vs_Rain <- data.frame(year = df_P[109:684,]$year_tsm, mes = df_P[109:684,]$mes,
-                          tsm =df_P[109:684,]$tsm,rain = chusis_estimado$rain,
-                          fecha = make_date(year =  df_P[109:684,]$year_tsm, month =df_P[109:684,]$mes )) 
+##Essperar opinión del Ingeniero
+#Para UDEP 337 Y demás estaciones empieza df_P en 109
+TSM_vs_Rain <- data.frame(year = df_P[337:684,]$year_tsm, mes = df_P[337:684,]$mes,
+                          tsm =df_P[337:684,]$tsm,rain = UDEP_estimado$rain,
+                          fecha = make_date(year =  df_P[337:684,]$year_tsm, month =df_P[337:684,]$mes )) 
 model_tsm_rain <- lm.fit (tsm ~ rain, data = TSM_vs_Rain)
-
+TSM_vs_Rain
 summary(model_tsm_rain)
 
-ggplot(TSM_vs_Rain, aes(x = tsm, y =rain)) + geom_point() 
+ggplot(TSM_vs_Rain, aes(x = tsm, y =rain)) + geom_point() +geom_smooth(method = loess, formula = y ~ x ) + 
+  labs(x = "Temperatura superficial del mar(°C)", 
+       title =  "Gráfico de relación entre Tsm y Precipitación de la\nestación UDEP", 
+       y = "Precipitación (mm)")+
+  scale_x_continuous(breaks = seq(10,30, 2))+
+  scale_y_continuous(breaks = seq(0,800, 100))+
+  geom_vline(xintercept=24, color = "red")+
+  geom_vline(xintercept=21, color = "green")+ theme_bw()
+
+
+
+####Modo Walter
+
+model_tsm_rain <- lm(log(rain +1 )~log(tsm), data=TSM_vs_Rain)
+ggplot
 
 write.xlsx(TSM_vs_Rain, file = "TSM_vs_Rain.xlsx", colNames = TRUE)
 
 
+####Boxplot mensuales 
+UDEP_box_plot <- data.frame(mes = factor(UDEP_estimado$month),
+                              year = UDEP_estimado$year, 
+                              rain = UDEP_estimado$rain,
+                              temp_max = UDEP_estimado$temp_max, 
+                              temp_min = UDEP_estimado$temp_min,
+                              temp_med = UDEP_estimado$temp_med)
+
+tsm_box_plot <- data.frame(mes = factor(df_P$mes),
+                           year =df_P$year_tsm, tsm = df_P$tsm)
+#[229:576,]
+b1 <- ggplot(data = SanMiguel_box_plot, aes(mes,rain)) +
+  scale_x_discrete(limits = factor(1:12), labels= c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago","Sep","Oct", "Nov", "Dic"))+
+  labs(x = "Meses", 
+       title =  "Precipitación Acumulada", 
+       y = "Precipitación (mm)")+
+  geom_boxplot()+ theme_bw()+
+  stat_summary(fun=mean, geom="point", shape=18,
+             size=2, color="red")+
+  theme (text = element_text(size=9), 
+         plot.title = element_text(hjust = 0.5))
+      
+
+b2 <-  ggplot(data = SanMiguel_box_plot[229:576,], aes(mes,temp_med)) +
+  scale_x_discrete(limits = factor(1:12), labels= c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago","Sep","Oct", "Nov", "Dic"))+
+  labs(x = "Meses", 
+       title =  "Temperatura media", 
+       y = "Temperatura (°C)")+
+  geom_boxplot()+ theme_bw()+
+  stat_summary(fun=mean, geom="point", shape=18,
+               size=2, color="red")+
+  theme (text = element_text(size=9), 
+         plot.title = element_text(hjust = 0.5))
+
+b3 <-  ggplot(data = SanMiguel_box_plot[229:576,], aes(mes,temp_max)) +
+  scale_x_discrete(limits = factor(1:12), labels= c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago","Sep","Oct", "Nov", "Dic"))+
+  labs(x = "Meses", 
+       title =  "Temperatura máxima", 
+       y = "Temperatura (°C)")+
+  geom_boxplot()+ theme_bw()+
+  stat_summary(fun=mean, geom="point", shape=18,
+               size=2, color="red")+
+  theme (text = element_text(size=9), 
+         plot.title = element_text(hjust = 0.5))
+
+b4 <-  ggplot(data = SanMiguel_box_plot[229:576,], aes(mes,temp_min)) +
+  scale_x_discrete(limits = factor(1:12), labels= c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago","Sep","Oct", "Nov", "Dic"))+
+  labs(x = "Meses", 
+       title =  "Temperatura mínima", 
+       y = "Temperatura (°C)")+
+  geom_boxplot()+ theme_bw()+
+  stat_summary(fun=mean, geom="point", shape=18,
+               size=2, color="red")+
+  theme (text = element_text(size=9), 
+         plot.title = element_text(hjust = 0.5))
+
+grid.arrange(b1, b2, b3, b4, ncol=2, nrow=2, 
+             top =  textGrob("Box Plot de la estación San Miguel", gp = gpar(fontsize = 13, fontface = 'bold')))
+
+gc()
+#####Estaciones
+verano_chusis <- chusis_estimado%>%
+  group_by(year) %>%
+  filter(month == 1 |month == 2 | month == 3 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+otoño_chusis <- chusis_estimado%>%
+  group_by(year) %>%
+  filter(month == 4 |month == 5 | month == 6 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+inverno_chusis <- chusis_estimado%>%
+  group_by(year) %>%
+  filter(month == 7 |month == 8 | month == 9 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+primavera_chusis <- chusis_estimado%>%
+  group_by(year) %>%
+  filter(month == 10 |month == 11 | month == 12 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+ 
+
+verano_Bernal <- Bernal_estimado%>%
+  group_by(year) %>%
+  filter(month == 1 |month == 2 | month == 3 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+otoño_Bernal <- Bernal_estimado%>%
+  group_by(year) %>%
+  filter(month == 4 |month == 5 | month == 6 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+inverno_Bernal <- Bernal_estimado%>%
+  group_by(year) %>%
+  filter(month == 7 |month == 8 | month == 9 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+primavera_Bernal <- Bernal_estimado%>%
+  group_by(year) %>%
+  filter(month == 10 |month == 11 | month == 12 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
 
 
+verano_Miraflores <- Miraflores_estimado%>%
+  group_by(year) %>%
+  filter(month == 1 |month == 2 | month == 3 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+otoño_Miraflores <- Miraflores_estimado%>%
+  group_by(year) %>%
+  filter(month == 4 |month == 5 | month == 6 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+inverno_Miraflores <- Miraflores_estimado%>%
+  group_by(year) %>%
+  filter(month == 7 |month == 8 | month == 9 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+primavera_Miraflores <- Miraflores_estimado%>%
+  group_by(year) %>%
+  filter(month == 10 |month == 11 | month == 12 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+
+
+verano_SanMiguel <- SanMiguel_estimado%>%
+  group_by(year) %>%
+  filter(month == 1 |month == 2 | month == 3 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+otoño_SanMiguel <- SanMiguel_estimado%>%
+  group_by(year) %>%
+  filter(month == 4 |month == 5 | month == 6 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+inverno_SanMiguel <- SanMiguel_estimado%>%
+  group_by(year) %>%
+  filter(month == 7 |month == 8 | month == 9 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+primavera_SanMiguel <- SanMiguel_estimado%>%
+  group_by(year) %>%
+  filter(month == 10 |month == 11 | month == 12 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+
+
+verano_UDEP <- UDEP_estimado%>%
+  group_by(year) %>%
+  filter(month == 1 |month == 2 | month == 3 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+otoño_UDEP <- UDEP_estimado%>%
+  group_by(year) %>%
+  filter(month == 4 |month == 5 | month == 6 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+invierno_UDEP <- UDEP_estimado%>%
+  group_by(year) %>%
+  filter(month == 7 |month == 8 | month == 9 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+primavera_UDEP <- UDEP_estimado%>%
+  group_by(year) %>%
+  filter(month == 10 |month == 11 | month == 12 )%>%
+  select(year:temp_med)%>%
+  summarise(rain = sum(rain),
+            temp_max = max(temp_max),
+            temp_min = min(temp_min),
+            temp_med = mean(temp_med))
+
+
+primavera_Bernal <- cbind(estacion = "Primavera", primavera_Bernal)
+
+
+chusis_estaciones <- rbind(verano_chusis, otoño_chusis, inverno_chusis, primavera_chusis)
+Bernal_estaciones <- rbind(verano_Bernal, otoño_Bernal, inverno_Bernal, primavera_Bernal)
+Miraflores_estaciones <- rbind(verano_Miraflores, otoño_Miraflores, inverno_Miraflores, primavera_Miraflores)
+SanMiguel_estaciones <- rbind(verano_SanMiguel, otoño_SanMiguel, inverno_SanMiguel, primavera_SanMiguel)
+UDEP_estaciones <- rbind(verano_UDEP, otoño_UDEP, invierno_UDEP, primavera_UDEP)
+
+UDEP_estaciones$estacion <- as.factor(UDEP_estaciones$estacion)
+
+
+
+a1 <- ggplot(data = UDEP_estaciones, aes(estacion,rain)) +
+  scale_x_discrete( limits = factor(c("Verano", "Otoño", "Invierno", "Primavera")), labels = c("V","O","I","P"))+
+  labs(x = "Estaciones del año",  
+       title ="Precipitación acum.",
+       y = "Precipitación (mm)")+
+  geom_boxplot()+ theme_bw()+
+  scale_y_continuous(breaks = seq(0,1000,150))+
+  stat_summary(fun=mean, geom="point", shape=18,
+               size=2, color="red")+
+  theme (text = element_text(size=9))
+
+
+a2 <- ggplot(data = UDEP_estaciones, aes(estacion,temp_max)) +
+  scale_x_discrete( limits = factor(c("Verano", "Otoño", "Invierno", "Primavera")), labels = c("V","O","I","P"))+
+  labs(x = "Estaciones del año", 
+       title = "Temperatura máxima",
+       y = "Temperatura (°C)")+
+  scale_y_continuous(breaks = seq(0,40,3))+
+  geom_boxplot()+ theme_bw()+
+  stat_summary(fun=mean, geom="point", shape=18,
+               size=2, color="red")+
+  theme (text = element_text(size=9))
+
+#[c(20:48,68:96,116:144,164:192),]
+a3 <- ggplot(data = UDEP_estaciones, aes(estacion,temp_min)) +
+  scale_x_discrete( limits = factor(c("Verano", "Otoño", "Invierno", "Primavera")), labels = c("V","O","I","P"))+
+  labs(x = "Estaciones del año", 
+       title = "Temperatura mínima",
+       y = "Temperatura (°C)")+
+  scale_y_continuous(breaks = seq(0,40,3))+
+  geom_boxplot()+ theme_bw()+
+  stat_summary(fun=mean, geom="point", shape=18,
+               size=2, color="red")+
+  theme (text = element_text(size=9))
+
+a4 <- ggplot(data = UDEP_estaciones, aes(estacion,temp_med)) +
+  scale_x_discrete( limits = factor(c("Verano", "Otoño", "Invierno", "Primavera")), labels = c("V","O","I","P"))+
+  labs(x = "Estaciones del año",
+       title = "Temperatura media",
+       y = "Temperatura (°C)")+
+  scale_y_continuous(breaks = seq(0,40,3))+
+  geom_boxplot()+ theme_bw()+
+  stat_summary(fun=mean, geom="point", shape=18,
+               size=2, color="red")+
+  theme (text = element_text(size=9))
+
+
+
+
+library(gridExtra)
+library(grid)
+install.packages("grid")
+grid.arrange(a1, a2, a3,a4, ncol=4, nrow=1, 
+             top =  textGrob("Box Plot de la estación UDEP", gp = gpar(fontsize = 13, fontface = 'bold')))
+         
+
+
+##Estadísticos Descriptivos
+summary(df_P$tsm)
+sd(df_P$tsm)
+var(df_P$tsm)
 

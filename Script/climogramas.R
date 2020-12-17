@@ -212,27 +212,32 @@ for (i in 1 : 48) {
   
 }
 
+#####Cambiar cada vez que se corra el gráfico y correr anomalia_rain_
+Anomalia_rain_U <-  cbind(sign= ifelse(An_U > 0, "pos", "neg"), Anomalia_rain_U)
+
 ###Gráfica anomalia Lluvia#####################################
 #WALTER <- (Cambiar colores de negativos y positivos)
 #Trazar linea 0
-Anomalia_rain_B%>% 
-ggplot(aes(label = round(An_B, 1))) +
-  geom_bar(aes(x = Year, y = An_M), stat = "identity", 
-           fill = "#84c6ed", alpha = .85) +
+gg_An <- Anomalia_rain_U%>% 
+ggplot(aes(label = round(An_U, 1), fill=sign)) +
+  geom_bar(aes(x = Year, y = An_U), stat = "identity", 
+            alpha = .85) +
   scale_x_continuous(breaks = 1972:2019) +
   scale_y_continuous(
     breaks = seq(-100,1000 ,50),
-    name = "Anomalía (mm)") +
+    name = "Anomalía (%)") +
+  scale_fill_manual(values = c("#99000d", "#034e7b"))+
   # geom_text(aes(x = month, y = mean_temp), nudge_y = 1) +
-  labs(x = "Años", title = "Variabilidad interanual de los acumulados anuales de precipitación \n expresada por sus anomalías en la estación - Estación Bernal" 
+  labs(x = "Años", title = "Variabilidad interanual de los acumulados anuales de precipitación \n expresada por sus anomalías en la Estación UDEP" 
        # caption = "Fuente: Yo\n*Datos desde 1991 a 2019",
   ) +
+  
   theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+gg_An + geom_hline (yintercept=0)
 
 
 
-
-
+gc()
 
 
 
@@ -379,22 +384,24 @@ for (i in 1 : 29) {
 }
 
 ###Gráfica anomalia Tmax#####################################
-Anomalia_temp_max_B%>% 
-  ggplot(aes(label = round(An_B, 1))) +
-  geom_bar(aes(x = Year, y = An_B), stat = "identity", 
-           fill = "#84c6ed", alpha = .85) +
+Anomalia_temp_max_U <-  cbind(sign= ifelse(An_U > 0, "pos", "neg"), Anomalia_temp_max_U)
+
+gg_An <- Anomalia_temp_max_U%>% 
+  ggplot(aes(label = round(An_U, 1),fill=sign) ) +
+  geom_bar(aes(x = Year, y = An_U), stat = "identity", 
+          alpha = .85) +
   scale_x_continuous(breaks = 1991:2019) +
   scale_y_continuous(
     breaks = seq(-5,5 ,1),
     name = "Anomalía (°C)") +
+  scale_fill_manual(values = c("#99000d", "#034e7b"))+
   # geom_text(aes(x = month, y = mean_temp), nudge_y = 1) +
-  labs(x = "Años", title = "Variabilidad interanual de los promedios anuales de temperatura máxima expresada por sus anomalías en la estación
--Estación Bernal" 
+  labs(x = "Años", title = "Variabilidad interanual de los promedios anuales de temperatura máxima\nexpresada por sus anomalías en la Estación UDEP" 
        # caption = "Fuente: Yo\n*Datos desde 1991 a 2019",
   ) +
   theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-
+gg_An + geom_hline (yintercept=0)
 
 
 
@@ -538,21 +545,24 @@ for (i in 1 : 29) {
   Anomalia_temp_min_B <- data.frame(Year , An_B)
   
 }
-
+gc()
 
 ###Gráfica anomalia Tmin#####################################
 #WALTER <- (Cambiar colores de negativos y positivos)
-Anomalia_temp_min_B%>% 
-  ggplot(aes(label = round(An_B, 1))) +
-  geom_bar(aes(x = Year, y = An_B), stat = "identity", 
-           fill = "#84c6ed", alpha = .85) +
+Anomalia_temp_min_U <-  cbind(sign= ifelse(An_U > 0, "pos", "neg"), Anomalia_temp_min_U)
+
+gg_An <- Anomalia_temp_min_U%>% 
+  ggplot(aes(label = round(An_U, 1),fill=sign)) +
+  geom_bar(aes(x = Year, y = An_U), stat = "identity", 
+            alpha = .85) +
   scale_x_continuous(breaks = 1991:2019) +
   scale_y_continuous(
     breaks = seq(-5,5 ,1),
     name = "Anomalía (°C)") +
+  scale_fill_manual(values = c("#99000d", "#034e7b"))+
   # geom_text(aes(x = month, y = mean_temp), nudge_y = 1) +
-  labs(x = "Años", title = "Variabilidad interanual de los promedios anuales de Temperatura mínima expresada por sus anomalías en la estación
--Estación Bernal" 
+  labs(x = "Años", title = "Variabilidad interanual de los promedios anuales de Temperatura mínima\nexpresada por sus anomalías en la Estación UDEP" 
        # caption = "Fuente: Yo\n*Datos desde 1991 a 2019",
   ) +
   theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+gg_An + geom_hline (yintercept=0)

@@ -6,7 +6,6 @@ library(dplyr)
 library(openxlsx)
 library(lubridate)
 library(reshape2)
-install.packages("GGally")
 library(GGally)
 library(ggfortify)
 library(tidyverse)
@@ -141,7 +140,7 @@ UDEP_17 <- data.frame (rain = UDEP_estimado[309 : 320,]$rain,
 
 
 ##Precipitación
-gg_fen <- ggplot(SanMiguel_83 ,aes (label = round(rain, 1))) +
+gg_fen <- ggplot(Miraflores_83 ,aes (label = round(rain, 1))) +
   #geom_line(aes(x = fecha, y = anomalia, color = "Anomalías")) +
   #ggplot(chusis_estimado,aes (label = round(rain, 1))) +
   geom_bar(aes(x = fecha, (y = rain)), stat = "identity", 
@@ -164,12 +163,12 @@ gg_fen <- ggplot(SanMiguel_83 ,aes (label = round(rain, 1))) +
 gg_fen + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 
-gc()
+
 ####### temp y lluvia añas niño #######
-colors <- c("Temperatura máxima" = "red", "Temperatura mínima" = "blue", "Temperatura media" = "green","Precipitación"= "#5798EC")
-gg_fen_t <- ggplot(Miraflores_17,aes (label = round(temp_max, 1))) +
+colors <- c("Temperatura máxima" = "red", "Temperatura mínima" = "blue", "Temperatura media" = "green","Precipitación"= "#FE7E7E")
+gg_fen_t <- ggplot(chusis_98,aes (label = round(temp_max, 1))) +
   geom_bar(aes(x = fecha, (y = rain/20),color = "Precipitación"), stat = "identity", 
-           fill = "#5798EC", alpha = .85)+
+           fill = "#FE7E7E", alpha = .85)+
   geom_line(aes(x = fecha, y = temp_max, color = "Temperatura máxima")) +
   geom_line(aes(x = fecha, y = temp_med, color = "Temperatura media")) +
   #ggplot(chusis_estimado,aes (label = round(rain, 1))) +
@@ -178,7 +177,7 @@ gg_fen_t <- ggplot(Miraflores_17,aes (label = round(temp_max, 1))) +
   geom_point(aes(x = fecha, y = temp_min), size = 0.1)+
   geom_point(aes(x = fecha, y = temp_med), size = 0.1)+
   #geom_point(aes(x = dia, y = tsm_mean), size = 0.1)+
-  scale_x_date(date_labels = "%b-%Y", breaks = seq.Date(as.Date("2016-09-01"), as.Date("2017-08-1"),
+  scale_x_date(date_labels = "%b-%Y", breaks = seq.Date(as.Date("1997-09-01"), as.Date("1998-08-1"),
                                                         by = "1 month")) +
   scale_y_continuous(
     breaks = seq(0,40, 5),
@@ -186,7 +185,7 @@ gg_fen_t <- ggplot(Miraflores_17,aes (label = round(temp_max, 1))) +
   sec.axis = sec_axis(~.*(20), name = "Precipitación(mm)",
                    breaks = seq(0,800, 100)))+
  #  geom_text(aes(x = month, y = T), nudge_y = 1) +
-  labs( title =  "Temperatura máxima y mínima mensual durante el evento El Niño de 2016-2017\nEstación Miraflores",
+  labs( title =  "Temperatura máxima y mínima mensual durante el evento El Niño de 1997-1998\nEstación Chusis",
        # caption = "Fuente: Yo\n*Datos desde 1991 a 2019",
        color  = "" ) +
   scale_color_manual(values = colors) +
@@ -196,7 +195,7 @@ gg_fen_t + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   theme(legend.position="bottom") + guides(fill = guide_legend(nrow = 1))
 
 
-
+gc()
 
 
 
@@ -235,25 +234,25 @@ FEN_UDEP <- data.frame(fecha = Bernal_98$fecha,
                          mes = factor(c("Sep","Oct", "Nov", "Dic","Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago")))
 ######FEN LLUVIA
 
-FEN_UDEP$mes = factor(FEN_UDEP$mes, 
+FEN_chusis$mes = factor(FEN_chusis$mes, 
                       levels=c("Sep","Oct", "Nov", "Dic","Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago"))
 
 
-FEN_UDEP_1 <- melt(FEN_UDEP[,2:8], id.vars = c("mes")) 
+FEN_chusis_1 <- melt(FEN_chusis[,2:9], id.vars = c("mes")) 
 #rain_83 = "#5AEF61"
-grays = c( rain_98 = "#FE7E7E", rain_17 = "#5798EC")
+grays = c( rain_83 = "#5AEF61", rain_98 = "#FE7E7E", rain_17 = "#5798EC")
 
 
-ggplot (FEN_UDEP_1[1:24,], aes(x = (mes), y=value, fill= variable)) + 
+ggplot (FEN_chusis_1[1:36,], aes(x = (mes), y=value, fill= variable)) + 
   geom_bar (stat="identity",  position ="dodge",colour="#393535")+
   scale_x_discrete(limits = factor(c("Sep","Oct", "Nov", "Dic","Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago")))+
   scale_y_continuous( 
     breaks = seq(0,650, 50),
     name = "Precipitación(mm)")+
-  labs( x= "Meses del año hidrológico" ,title =  "Precipitaciones acumuladas mensuales-Estación UDEP"
+  labs( x= "Meses del año hidrológico" ,title =  "Precipitaciones acumuladas mensuales-Estación Chusis"
         # caption = "Fuente: Yo\n*Datos desde 1991 a 2019",
         ) + 
-  scale_fill_manual("", values = grays, labels=c( "FEN 1997-1998", "FEN 2016-2017"))+
+  scale_fill_manual("", values = grays, labels=c("FEN 1982-1983", "FEN 1997-1998", "FEN 2016-2017"))+
   theme_bw()+
   theme(legend.position="bottom") + guides(fill = guide_legend(nrow = 1))
 
@@ -267,11 +266,11 @@ ggplot (FEN_UDEP_1[1:24,], aes(x = (mes), y=value, fill= variable)) +
 
 colors <- c("T. máxima 1982-1983" = "red", "T. máxima 1997-1998"= "blue", "T. máxima 2016-2017"= "green")
 gg_fen_l <- ggplot(FEN_chusis,aes (label = round(temp_max_17, 1))) +
-  geom_line(aes(x = fecha, y = temp_max_83, color = "T. máxima 1982-1983")) +
+ # geom_line(aes(x = fecha, y = temp_max_83, color = "T. máxima 1982-1983")) +
   #ggplot(chusis_estimado,aes (label = round(rain, 1))) +
   geom_line(aes(x = fecha, y = temp_max_98, color = "T. máxima 1997-1998"))+
   geom_line(aes(x =fecha, y = temp_max_17, color = "T. máxima 2016-2017"))+
-  geom_point(aes(x = fecha, y = temp_max_83), size = 0.1)+
+  #geom_point(aes(x = fecha, y = temp_max_83), size = 0.1)+
   geom_point(aes(x = fecha, y = temp_max_98), size = 0.1)+
   geom_point(aes(x = fecha, y = temp_max_17), size = 0.1)+
   scale_x_date(date_labels = "%m-%Y", breaks = seq.Date(as.Date("1982-09-01"), as.Date("1983-08-1"),
@@ -291,6 +290,9 @@ gg_fen_l <- ggplot(FEN_chusis,aes (label = round(temp_max_17, 1))) +
 
 gg_fen_l+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
+#Gráficos no se ven bien por eso no se toman
+
+
 
 ####FEN TSM###########
 
@@ -302,7 +304,7 @@ FEN_tsm = data.frame(fecha = make_date(year = df_P[237:248,]$year_tsm,
                                                                           
 
 #colors <- c("T. máxima 1982-1983" = "red", "T. máxima 1997-1998"= "blue", "T. máxima 2016-2017"= "green")
-ggplot(Fen_2017,aes (label = round(tsm, 1))) +
+ggplot(Fen_2017_tsm,aes (label = round(tsm, 1))) +
   geom_line(aes(x = dia, y = tsm), colour = "#38A8FF", size = 0.75) +
   #scale_size_manual(values = c(1, 4)) +
   scale_x_continuous(breaks = seq(1,365, 30))+
@@ -316,7 +318,7 @@ ggplot(Fen_2017,aes (label = round(tsm, 1))) +
  
 
 
-gc()
+
 
 
 
@@ -332,6 +334,7 @@ chusis_anual_temp_max <- chusis_estimado%>%
   summarise( rain = mean(temp_max))
 chusis_anual_temp_max
 
+
 #Chusis 
 chusis_estimado_1 <- cbind(Fecha  = make_date(year = chusis_estimado$year, 
                                             month = chusis_estimado$month), chusis_estimado )
@@ -343,6 +346,7 @@ SanMiguel_estimado_1 <- cbind(Fecha  = make_date(year = SanMiguel_estimado$year,
                                               month = SanMiguel_estimado$month), SanMiguel_estimado )
 UDEP_estimado_1 <- cbind(Fecha  = make_date(year = UDEP_estimado$year, 
                                               month = UDEP_estimado$month), UDEP_estimado )
+
 
 prep_estimada = read.xlsx(Estimados, sheet='Prep_estimada', startRow = 1 ,
                             colNames = TRUE)
@@ -389,7 +393,7 @@ rain_ts<- ggplot(prep_estimada_1, aes(x = fecha, y=value, fill = variable))+
   scale_y_continuous(
     breaks = seq(0,600 ,150),
     name = "Precipitación (mm)") +
-  labs(x = "Años", title =  "Precipitación mensual estación m 1972-2019", 
+  labs(x = "Años", title =  "Precipitaciones mensuales 1972-2019", 
        color  = ""
   ) +
   scale_color_manual(values = colors) +
@@ -402,7 +406,7 @@ rain_ts+ theme(legend.position="bottom") + guides(fill = guide_legend(nrow = 1))
 
 
 ####Teperaturas
-temp_ts<- ggplot(Temp_med_estimada_1, aes(x = (fecha), y=value, fill= variable))+
+temp_ts<- ggplot(Temp_min_estimada_1, aes(x = (fecha), y=value, fill= variable))+
   geom_line (colour="#393535")+
   scale_x_date(date_labels = "%Y", breaks = seq.Date(as.Date("1972-01-01"), as.Date("2019-12-31"),
                                                      by = "1 year")) +
@@ -425,32 +429,30 @@ temp_ts
 gc()
 
 #######Grafica de series climáticas anuales
-rain_ST<- ggplot(prep_estimada_1, aes(x = fecha, y=value, fill = variable))+
-  geom_line (colour="#393535")+
-  scale_x_date(date_labels = "%Y", breaks = seq.Date(as.Date("1972-01-01"), as.Date("2019-12-1"),
-                                                     by = "1 year")) +
-  scale_y_continuous(
-    breaks = seq(0,600 ,150),
-    name = "Precipitación (mm)") +
-  labs(x = "Años", title =  "Precipitación mensual estación m 1972-2019", 
-       color  = ""
-  ) +
-  scale_color_manual(values = colors) +
-  theme_bw()
-rain_ts+ theme(legend.position="bottom") + guides(fill = guide_legend(nrow = 1))+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))+ 
-  facet_grid(variable ~., labeller=plot_labeller_1)
-
 
 Chusis_rain_anual_ts <- ts(chusis_estimado[,3], start=1972, frequency=12)
-Bernal_rain_anual_ts <- ts(Bernal_anual, start=1972, frequency=1)
-Miraflores_rain_anual_ts <- ts(Miraflores_anual, start=1972, frequency=1)
-SanMiguel_rain_anual_ts <- ts(SanMiguel_anual, start=1972, frequency=1)
-UDEP_rain_anual_ts <- ts(UDEP_anual, start=1991, frequency=1)
+Bernal_rain_anual_ts <- ts(Bernal_estimado[,3], start=1972, frequency=12)
+Miraflores_rain_anual_ts <- ts(Miraflores_estimado[,3], start=1972, frequency=12)
+SanMiguel_rain_anual_ts <- ts(SanMiguel_estimado[,3], start=1972, frequency=12)
+UDEP_rain_anual_ts <- ts(UDEP_estimado[,3], start=1991, frequency=12)
 
-Chusis_Tmax_anual_ts <- ts(chusis_anual_temp_max, start=1972, frequency=1)
+Chusis_Tmax_anual_ts <- ts(chusis_estimado[229:576,4], start=1991, frequency=12)
+Bernal_Tmax_anual_ts <- ts(Bernal_estimado[229:576,4], start=1991, frequency=12)
+Miraflores_Tmax_anual_ts <- ts(Miraflores_estimado[229:576,4], start=1991, frequency=12)
+SanMiguel_Tmax_anual_ts <- ts(SanMiguel_estimado[229:576,4], start=1991, frequency=12)
+UDEP_Tmax_ts <- ts(UDEP_estimado[,4], start=1991, frequency=12)
 
+Chusis_Tmin_anual_ts <- ts(chusis_estimado[229:576,5], start=1991, frequency=12)
+Bernal_Tmin_anual_ts <- ts(Bernal_estimado[229:576,5], start=1991, frequency=12)
+Miraflores_Tmin_anual_ts <- ts(Miraflores_estimado[229:576,5], start=1991, frequency=12)
+SanMiguel_Tmin_anual_ts <- ts(SanMiguel_estimado[229:576,5], start=1991, frequency=12)
+UDEP_Tmin_ts <- ts(UDEP_estimado[,5], start=1991, frequency=12)
 
+Chusis_Tmed_anual_ts <- ts(chusis_estimado[229:576,6], start=1991, frequency=12)
+Bernal_Tmed_anual_ts <- ts(Bernal_estimado[229:576,6], start=1991, frequency=12)
+Miraflores_Tmed_anual_ts <- ts(Miraflores_estimado[229:576,6], start=1991, frequency=12)
+SanMiguel_Tmed_anual_ts <- ts(SanMiguel_estimado[229:576,6], start=1991, frequency=12)
+UDEP_Tmed_ts <- ts(UDEP_estimado[,6], start=1991, frequency=12)
 
 plot(Chusis_Tmax_anual_ts[,2])
 ggplot2::autoplot(Chusis_Tmax_anual_ts[,2]) + xlab("Year") + ylab("Precipitación(mm)") +
@@ -471,9 +473,16 @@ autoplot(Chusis_rain_anual_ts, series="Data") +
 library(graphics)
 library(forecast)
 
-decompose(Chusis_rain_anual_ts)
-  autoplot(decompose(Chusis_rain_anual_ts, type ="multiplicative")) + xlab("Year") +
-  ggtitle("Precipitación serie de tiempo Chusis")
+
+TSM_dfP <- cbind(Fecha  = make_date(year = df_P$year, 
+                                    month = df_P$mes), df_P )
+TSM_ts <- ts(TSM_dfP$tsm , start=1963, frequency=12)
+  
+autoplot(decompose(TSM_ts, type ="additive")) + 
+  xlab("Año") +
+ ggtitle("Serie de tiempo - Temperatura superficial del mar") +
+  scale_x_continuous(breaks = seq(1963, 2020, 2 ))+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
 ####Indentificando tendencia con ManKendall
-attach(SanMiguel_anual)
-mk.test(rain)
+attach(chusis_tmin_anual)
+mk.test(temp_min)

@@ -63,7 +63,7 @@ model_B16 <- lm (Bernal_rain ~   miguel_rain + Esperanza_rain,
 model_B17 <- lm (Bernal_rain ~   chusis_rain + Esperanza_rain + miguel_rain + mallares_rain
                  + miraflores_rain +0,
                  data = data_rain)
-summary(model_B17)
+summary(model_B16)
 
 ############Código de estimación###################
 n=0  
