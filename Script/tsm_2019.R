@@ -257,10 +257,10 @@ AN_vs_Rain <- data.frame(year = df_A[109:684,]$year_AN, mes = df_A[109:684,]$mes
 
 colors <- c( "Anomalías" = "red", "Precipitación" = "blue")
 
-gg_an_rain <- ggplot(AN_vs_Rain,aes (label = round(anomalia, 1))) +
+gg_an_rain <- ggplot(AN_vs_Rain,aes (label = round(anomalia, 1),group = 1)) +
+  geom_bar(aes(x = fecha, (y =  rain/50-4), color = "Precipitación"), 
+           stat = "identity",  alpha = .85 )+
   geom_line(aes(x = fecha, y = anomalia, color = "Anomalías")) +
-  geom_bar(aes(x = fecha, (y = rain/50 -4), color = "Precipitación"), 
-           stat = "identity",  alpha = .85)+
   scale_x_date(date_labels = "%Y", breaks = seq.Date(as.Date("1972-01-01"), 
                                                      as.Date("2019-12-1"),
  by = "1 year")) +
@@ -285,10 +285,10 @@ gg_an_rain$layers[[2]] <- geom_segment(mapping = aes(x = fecha, y = rain / 50 -4
 gg_an_rain 
  
 
-
+gc()
 
 ########TSM VS LLUVIA############################
-<<<<<<< HEAD
+#<<<<<<< HEAD
 ##Essperar opinión del Ingeniero
 #Para UDEP 337 Y demás estaciones empieza df_P en 109
 TSM_vs_Rain <- data.frame(year = df_P[337:684,]$year_tsm, mes = df_P[337:684,]$mes,
@@ -306,7 +306,7 @@ ggplot(TSM_vs_Rain, aes(x = tsm, y =rain)) + geom_point() +geom_smooth(method = 
   scale_y_continuous(breaks = seq(0,800, 100))+
   geom_vline(xintercept=24, color = "red")+
   geom_vline(xintercept=21, color = "green")+ theme_bw()
-=======
+#=======
 ##WALTER <- ecuación 
 TSM_vs_Rain <- data.frame(year = df_P[109:684,]$year_tsm, 
                           mes = df_P[109:684,]$mes,
@@ -321,7 +321,7 @@ summary(model_tsm_rain)
 
 ggplot(TSM_vs_Rain, aes(x = tsm, y =rain)) + 
   geom_point() 
->>>>>>> 7290bd547166e217ee92d28bc3f84075dc521c77
+#>>>>>>> 7290bd547166e217ee92d28bc3f84075dc521c77
 
 
 # Modo de Walter
